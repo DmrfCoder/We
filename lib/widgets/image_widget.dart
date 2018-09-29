@@ -7,8 +7,7 @@ import 'package:flutter_we/controllor/editor_controllor.dart';
 import 'package:flutter_we/pages/addproject_page.dart';
 
 class ImageWidget extends StatefulWidget {
-  String assetPath;
-  File imagefile;
+  File fileImage;
   int index;
 
   EditorControllor editorControllor;
@@ -16,7 +15,7 @@ class ImageWidget extends StatefulWidget {
   AddprojectState addprojectState;
 
   ImageWidget(
-      this.imagefile, this.index, this.editorControllor, this.addprojectState);
+      this.fileImage, this.index, this.editorControllor, this.addprojectState);
 
   @override
   State<StatefulWidget> createState() => new ImageWidgetState();
@@ -43,7 +42,7 @@ class ImageWidgetState extends State<ImageWidget> {
         ),
         Expanded(
           child: new GestureDetector(
-            child: new Image.file(widget.imagefile),
+            child: new Image.file(widget.fileImage),
             onTap: clickImage,
           ),
           flex: 8,

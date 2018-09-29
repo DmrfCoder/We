@@ -4,13 +4,12 @@ import 'package:flutter/widgets.dart';
 
 class EditBean {
   int index;
-  bool istext;
-  String text;
-  File image;
+  bool isText;
+  String content;
 
-  EditBean(this.index, this.istext, this.text, this.image);
+  EditBean(this.index, this.isText, this.content);
 
-  updateIndex(){
+  updateIndex() {
     index++;
   }
 }

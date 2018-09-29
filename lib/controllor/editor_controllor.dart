@@ -25,7 +25,7 @@ class EditorControllor {
     _editbeanList = new EditbeanList();
     _curIndex = 0;
 
-    _editbeanList.addEditBean("", _curIndex);
+    _editbeanList.addEditBean("", _curIndex, true);
   }
 
   EditbeanList get editbeanList => _editbeanList;
@@ -45,10 +45,17 @@ class EditorControllor {
     }
   }
 
-  addPicture(File file) {
-    if (_editbeanList.addEditBean(file, _curIndex+1)) {
+  addPicture(String strImage) {
+    if (_editbeanList.addEditBean(strImage, _curIndex + 1, false)) {
       _curIndex++;
-      _editbeanList.addEditBean("", _curIndex);
+      _editbeanList.addEditBean("", _curIndex, true);
     }
   }
+
+//  addPicture(File file) {
+//    if (_editbeanList.addEditBean(file, _curIndex+1)) {
+//      _curIndex++;
+//      _editbeanList.addEditBean("", _curIndex);
+//    }
+//  }
 }

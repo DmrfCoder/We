@@ -9,21 +9,15 @@ class EditbeanList {
     list = new List();
   }
 
-  addEditBean(var source, int curIndex) {
-    if (source is String) {
-      EditBean editBean = new EditBean(curIndex, true, source, null);
-      list.add(editBean);
-      return false;
-    } else if (source is File) {
-      EditBean editBean = new EditBean(curIndex, false, null, source);
+  addEditBean(var source, int curIndex, bool istext) {
+    EditBean editBean = new EditBean(curIndex, istext, source);
 
-      if (curIndex == list.length) {
-        _insertImageToList(curIndex, editBean);
-        return true;
-      } else {
-        _insertImageToList(curIndex, editBean);
-        return false;
-      }
+    if (curIndex == list.length) {
+      list.add(editBean);
+      return true;
+    } else {
+      _insertImageToList(curIndex, editBean);
+      return false;
     }
   }
 

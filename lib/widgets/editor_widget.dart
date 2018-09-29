@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_we/beans/edit_bean.dart';
@@ -26,16 +29,13 @@ class _EditorState extends State<Editor> {
     final children = <Widget>[];
 
     for (EditBean editbean in list) {
-      if (editbean.istext) {
-        TextEditingController textEditingController =
-            new TextEditingController();
-        textEditingController.text = editbean.text;
-
-        children.add(new TextWidget(editbean.text, editbean.index,
+      if (editbean.isText) {
+        children.add(new TextWidget(editbean.content, editbean.index,
             widget.editorControllor, widget.addprojectState));
       } else {
-
-        var image = new ImageWidget(editbean.image, editbean.index,
+        File imgFile;
+        imgFile.writeAsStringSync(editbean.content, encoding: latin1);
+        var image = new ImageWidget(imgFile, editbean.index,
             widget.editorControllor, widget.addprojectState);
 
         children.add(image);
