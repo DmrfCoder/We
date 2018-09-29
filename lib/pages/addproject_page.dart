@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_we/beans/event_bean.dart';
+import 'package:flutter_we/controllor/editor_controllor.dart';
 import 'package:flutter_we/utils/image_picker_channel_util.dart';
+import 'package:flutter_we/widgets/editor_widget.dart';
 
 class AddProjectPage extends StatefulWidget {
   @override
@@ -11,12 +13,13 @@ class AddProjectPage extends StatefulWidget {
 }
 
 class AddprojectState extends State<AddProjectPage> {
-
-
-
   ImagePicker _imagePicker = new ImagePickerChannel();
 
   File _imageFile;
+
+  void updateData() {
+    setState(() {});
+  }
 
   void captureImage(ImageSource captureMode) async {
     try {
@@ -24,21 +27,19 @@ class AddprojectState extends State<AddProjectPage> {
       setState(() {
         _imageFile = imageFile;
       });
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
     }
   }
-
-
-
-
 
   //时间输入框的控制器
   TextEditingController _timrController = new TextEditingController();
 
   //内容输入框的控制器
   TextEditingController _contentController = new TextEditingController();
+
+  EditorControllor editorControllor = new EditorControllor();
+
   DateTime now = new DateTime.now();
 
   void onTextClear() {
@@ -78,20 +79,18 @@ class AddprojectState extends State<AddProjectPage> {
   }
 
   _BuildPage() {
-
-
     var c = new Column(
       children: <Widget>[
+        new Editor(editorControllor, this),
 
-
-        new TextField(
-          maxLines: null,
-          controller: _contentController,
-          decoration: new InputDecoration(
-            contentPadding: const EdgeInsets.only(top: 10.0),
-            border: InputBorder.none,
-          ),
-        ),
+//        new TextField(
+//          maxLines: null,
+//          controller: _contentController,
+//          decoration: new InputDecoration(
+//            contentPadding: const EdgeInsets.only(top: 10.0),
+//            border: InputBorder.none,
+//          ),
+//        ),
       ],
     );
     return c;
@@ -105,7 +104,6 @@ class AddprojectState extends State<AddProjectPage> {
           onPressed: () {
             //做选择图片的操作
             captureImage(ImageSource.photos);
-
           }),
     );
 
@@ -136,6 +134,15 @@ class AddprojectState extends State<AddProjectPage> {
     return c;
   }
 
+  Widget _buildImage() {
+    if (_imageFile != null) {
+      return new Image.file(_imageFile);
+    } else {
+      return new Text('Take an image to start',
+          style: new TextStyle(fontSize: 18.0));
+    }
+  }
+
   void OnSave(String t, String cont) {
     if (cont.isEmpty) {
       return;
@@ -147,6 +154,4 @@ class AddprojectState extends State<AddProjectPage> {
     //print(js);
     Navigator.pop(context);
   }
-
-
 }
