@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/edit_list_bean.dart';
@@ -10,18 +12,20 @@ abstract class UpdateData {
 
 class EditorControllor {
   EditbeanList _editbeanList;
-  UpdateData updateData;
 
+  int _curIndex;
+
+  int get curIndex => _curIndex;
+
+  set curIndex(int value) {
+    _curIndex = value;
+  }
 
   EditorControllor() {
     _editbeanList = new EditbeanList();
+    _curIndex = 0;
 
-    _editbeanList.addEditBean("test1");
-    _editbeanList.addEditBean(Null);
-    _editbeanList.addEditBean("test2");
-    _editbeanList.addEditBean(Null);
-
-    _editbeanList.addEditBean("test3");
+    _editbeanList.addEditBean("", _curIndex);
   }
 
   EditbeanList get editbeanList => _editbeanList;
@@ -30,7 +34,7 @@ class EditorControllor {
     _editbeanList = value;
   }
 
-  deleteIndex(int index, ImageWidgetState state) {
+  deleteIndex(int index, var state) {
     if (index < 0 || index > _editbeanList.list.length) {
       return false;
     } else {
@@ -38,6 +42,13 @@ class EditorControllor {
       print('delete');
 
       state.updateData();
+    }
+  }
+
+  addPicture(File file) {
+    if (_editbeanList.addEditBean(file, _curIndex+1)) {
+      _curIndex++;
+      _editbeanList.addEditBean("", _curIndex);
     }
   }
 }

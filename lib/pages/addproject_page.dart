@@ -26,6 +26,7 @@ class AddprojectState extends State<AddProjectPage> {
       var imageFile = await _imagePicker.pickImage(imageSource: captureMode);
       setState(() {
         _imageFile = imageFile;
+        editorControllor.addPicture(_imageFile);
       });
     } catch (e) {
       print(e);
@@ -82,15 +83,6 @@ class AddprojectState extends State<AddProjectPage> {
     var c = new Column(
       children: <Widget>[
         new Editor(editorControllor, this),
-
-//        new TextField(
-//          maxLines: null,
-//          controller: _contentController,
-//          decoration: new InputDecoration(
-//            contentPadding: const EdgeInsets.only(top: 10.0),
-//            border: InputBorder.none,
-//          ),
-//        ),
       ],
     );
     return c;

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_we/pages/addproject_page.dart';
 
 class ImageWidget extends StatefulWidget {
   String assetPath;
+  File imagefile;
   int index;
 
   EditorControllor editorControllor;
@@ -13,7 +16,7 @@ class ImageWidget extends StatefulWidget {
   AddprojectState addprojectState;
 
   ImageWidget(
-      this.assetPath, this.index, this.editorControllor, this.addprojectState);
+      this.imagefile, this.index, this.editorControllor, this.addprojectState);
 
   @override
   State<StatefulWidget> createState() => new ImageWidgetState();
@@ -40,7 +43,7 @@ class ImageWidgetState extends State<ImageWidget> {
         ),
         Expanded(
           child: new GestureDetector(
-            child: new Image.asset(widget.assetPath),
+            child: new Image.file(widget.imagefile),
             onTap: clickImage,
           ),
           flex: 8,

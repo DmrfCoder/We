@@ -9,4 +9,8 @@ class EditBean {
   File image;
 
   EditBean(this.index, this.istext, this.text, this.image);
+
+  updateIndex(){
+    index++;
+  }
 }
