@@ -6,7 +6,6 @@ import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/controllor/editor_controllor.dart';
 import 'package:flutter_we/utils/image_picker_channel_util.dart';
 import 'package:flutter_we/widgets/editor_widget.dart';
-
 class AddProjectPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new AddprojectState();
