@@ -6,24 +6,44 @@ import 'package:path_provider/path_provider.dart';
 class FileIo {
   static final mFile = null;
 
-  static Future<String> get _localPath async {
+  static String localPath = "";
+
+  static FileIo _fileio;
+
+  static FileIo getInstance() {
+    if (_fileio == null) {
+      _fileio = new FileIo();
+    }
+    return _fileio;
+  }
+
+  Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
 
     return directory.path;
   }
 
-  static Future<File> get _localFile async {
-    final path = await _localPath;
-    return new File('$path/nameFile.txt',);
+  Future<File> getlocalFile({String filename = "data.txt"}) async {
+    if (localPath=="") {
+      localPath = await  _localPath;
+    }
+
+
+    File file = new File(
+      '$localPath/$filename',
+    );
+
+    return file;
   }
 
-  static Future<File> save(String name) async {
-    final file = await _localFile;
-    return file.writeAsString(name);
+  Future<File> save(String content, {String filename = "data.txt"}) async {
+    final file = await getlocalFile(filename: filename);
+
+    return file.writeAsString(content);
   }
 
-  static Future<String> get() async {
-    final file = await _localFile;
+  Future<String> get({String filename = "data.txt"}) async {
+    final file = await getlocalFile(filename: filename);
     return file.readAsString();
   }
 }

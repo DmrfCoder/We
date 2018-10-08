@@ -2,54 +2,48 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
+import 'package:flutter_we/callback/addprojet_callback.dart';
 import 'package:flutter_we/controllor/editor_controllor.dart';
 import 'package:flutter_we/utils/image_picker_channel_util.dart';
 import 'package:flutter_we/widgets/editor_widget.dart';
+import 'package:dio/dio.dart';
 
 class AddProjectPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new AddprojectState();
 }
 
-class AddprojectState extends State<AddProjectPage> {
+class AddprojectState extends State<AddProjectPage>
+    implements AddProjectPageCallBack {
   ImagePicker _imagePicker = new ImagePickerChannel();
-
   File _imageFile;
-
-  void updateData() {
-    setState(() {});
-  }
 
   void captureImage(ImageSource captureMode) async {
     try {
       var imageFile = await _imagePicker.pickImage(imageSource: captureMode);
       setState(() {
         _imageFile = imageFile;
+        String path=_imageFile.path;
+        print(path);
+        String filename=path.substring(path.lastIndexOf('/'));
+        print(filename);
 
-        editorControllor
-            .addPicture(_imageFile.readAsStringSync(encoding: latin1));
-        print("read success");
+
+
+        _editorControllor.addPicture(_imageFile.readAsStringSync(encoding: latin1));
       });
     } catch (e) {
       print(e);
     }
   }
 
-  //时间输入框的控制器
-  TextEditingController _timrController = new TextEditingController();
+  EditorControllor _editorControllor = new EditorControllor();
 
-  //内容输入框的控制器
-  TextEditingController _contentController = new TextEditingController();
-
-  EditorControllor editorControllor = new EditorControllor();
-
-  DateTime now = new DateTime.now();
-
-  void onTextClear() {
+  void onClear() {
     setState(() {
-      _timrController.text = "";
-      _contentController.text = "";
+      _editorControllor.clear();
     });
   }
 
@@ -57,6 +51,13 @@ class AddprojectState extends State<AddProjectPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
   }
 
   @override
@@ -85,7 +86,10 @@ class AddprojectState extends State<AddProjectPage> {
   _BuildPage() {
     var c = new Column(
       children: <Widget>[
-        new Editor(editorControllor, this),
+        new Editor(
+          addProjectPageCallBack: this,
+          list: _editorControllor.editbeanList.list,
+        ),
       ],
     );
     return c;
@@ -98,7 +102,7 @@ class AddprojectState extends State<AddProjectPage> {
           icon: Icon(Icons.picture_in_picture),
           onPressed: () {
             //做选择图片的操作
-            captureImage(ImageSource.photos);
+           // captureImage(ImageSource.photos);
           }),
     );
 
@@ -111,11 +115,7 @@ class AddprojectState extends State<AddProjectPage> {
       padding: const EdgeInsets.all(8.0),
       child: new RaisedButton(
           onPressed: () {
-            String cont = _contentController.text.toString();
-
-            OnSave(now.toString(), cont);
-
-            onTextClear();
+            OnSave();
           },
           color: Colors.blue,
           //highlightColor: Colors.lightBlueAccent,
@@ -138,15 +138,32 @@ class AddprojectState extends State<AddProjectPage> {
     }
   }
 
-  void OnSave(String t, String cont) {
-    if (cont.isEmpty) {
-      return;
-    }
-    TimelineModel timelineModel = new TimelineModel(t, cont, "这是标题");
-    String js = json.encode(timelineModel);
-//    FileIo.save(js);
-    eventBus.fire(timelineModel);
-    //print(js);
+  void OnSave() {
+    _editorControllor.dispose();
+    //onClear();
     Navigator.pop(context);
+  }
+
+  @override
+  deleteEditbean(EditBean editbean) {
+    // TODO: implement deleteEditbean
+    _editorControllor.deleteEditbean(editbean);
+    updateWidget();
+  }
+
+  @override
+  updateEditbean(EditBean editbean) {
+    // TODO: implement updateEditbean
+    _editorControllor.updateEditbean(editbean);
+  }
+
+  @override
+  updateCurEditbean(EditBean curEditbean) {
+    // TODO: implement updateCurEditbean
+    _editorControllor.updateCurEditbean(curEditbean);
+  }
+
+  updateWidget() {
+    setState(() {});
   }
 }

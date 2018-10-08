@@ -1,7 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter_we/beans/edit_bean.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'edit_list_bean.g.dart';
+
+@JsonSerializable()
 class EditbeanList {
   List<EditBean> list;
 
@@ -27,4 +31,9 @@ class EditbeanList {
       list[i].updateIndex();
     }
   }
+
+  factory EditbeanList.fromJson(Map<String, dynamic> json) =>
+      _$EditbeanListFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EditbeanListToJson(this);
 }

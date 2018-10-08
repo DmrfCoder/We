@@ -1,29 +1,42 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/edit_list_bean.dart';
+import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/widgets/image_widget.dart';
+import 'package:flutter_we/widgets/text_widget.dart';
 import 'package:path/path.dart';
-
-abstract class UpdateData {
-  void updateData();
-}
 
 class EditorControllor {
   EditbeanList _editbeanList;
+  var children;
 
   int _curIndex;
 
   int get curIndex => _curIndex;
 
-  set curIndex(int value) {
-    _curIndex = value;
+  updateCurEditbean(EditBean curEditbean) {
+    int value = curEditbean.index;
+
+    if (value < 0 || value >= _editbeanList.list.length) {
+      return false;
+    } else {
+      _curIndex = value;
+      return true;
+    }
+  }
+
+  clear() {
+    _editbeanList = null;
+    _curIndex = 0;
   }
 
   EditorControllor() {
     _editbeanList = new EditbeanList();
     _curIndex = 0;
+    children = <Widget>[];
 
     _editbeanList.addEditBean("", _curIndex, true);
   }
@@ -34,14 +47,25 @@ class EditorControllor {
     _editbeanList = value;
   }
 
-  deleteIndex(int index, var state) {
+  deleteEditbean(EditBean editbean) {
+    int index = editbean.index;
     if (index < 0 || index > _editbeanList.list.length) {
       return false;
     } else {
       _editbeanList.list.removeAt(index);
       print('delete');
 
-      state.updateData();
+      return true;
+    }
+  }
+
+  updateEditbean(EditBean editbean) {
+    int index = editbean.index;
+    if (index < 0 || index > _editbeanList.list.length) {
+      return false;
+    } else {
+      _editbeanList.list[index] = editbean;
+      return true;
     }
   }
 
@@ -52,10 +76,17 @@ class EditorControllor {
     }
   }
 
-//  addPicture(File file) {
-//    if (_editbeanList.addEditBean(file, _curIndex+1)) {
-//      _curIndex++;
-//      _editbeanList.addEditBean("", _curIndex);
-//    }
-//  }
+  dispose() {
+    DateTime now = new DateTime.now();
+    String time=now.toString();
+    time=time.substring(0,time.lastIndexOf(":"));
+
+    TimelineModel timelineModel =
+        new TimelineModel(time, editbeanList, "这是标题");
+    String js = json.encode(timelineModel);
+    print("js:" + js);
+    eventBus.fire(timelineModel);
+  }
+
+
 }

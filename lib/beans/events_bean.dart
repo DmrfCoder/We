@@ -6,6 +6,7 @@ part 'events_bean.g.dart';
 class TimeLineModelList {
   List<TimelineModel> list;
 
+
   TimeLineModelList(this.list);
 
   factory TimeLineModelList.fromJson(Map<String, dynamic> json) =>

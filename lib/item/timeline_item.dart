@@ -13,6 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License. */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/painters/timeline_painter.dart';
 
@@ -51,6 +52,15 @@ class TimelineElement extends StatelessWidget {
   }
 
   Widget _buildContentColumn(BuildContext context) {
+    String content = "";
+
+    for (EditBean list_item in model.editbeanList.list) {
+      if (list_item.isText) {
+        content = list_item.content;
+        break;
+      }
+    }
+
     return new Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,11 +79,11 @@ class TimelineElement extends StatelessWidget {
         ),
         new Expanded(
           child: new Text(
-            model.description != null
-                ? (model.description.length > 50
-                    ? model.description.substring(0, 50) + "..."
-                    : model.description)
-                : "",
+            content != null
+                ? (content.length > 50
+                    ? content.substring(0, 50) + "..."
+                    : content)
+                : content,
             // To prevent overflowing of text to the next element, the text is truncated if greater than 75 characters
             style: new TextStyle(
               color: descriptionColor != null ? descriptionColor : Colors.grey,
@@ -85,21 +95,15 @@ class TimelineElement extends StatelessWidget {
   }
 
   Widget _buildContentColumnTime(BuildContext context) {
-
-    Paint paint=new Paint();
-    paint.color=Colors.transparent;
+    Paint paint = new Paint();
+    paint.color = Colors.transparent;
 
     return new Column(
-
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.center,
-
-
       children: <Widget>[
         new Container(
-
-
           padding: const EdgeInsets.only(bottom: 8.0),
           child: new Text(
             model.time.length > 47
@@ -112,9 +116,7 @@ class TimelineElement extends StatelessWidget {
             ),
           ),
         ),
-
       ],
-
     );
   }
 
@@ -126,10 +128,7 @@ class TimelineElement extends StatelessWidget {
       child: new Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-
-
           new Expanded(
-
             child: _buildContentColumnTime(context),
           ),
           new AnimatedBuilder(

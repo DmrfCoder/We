@@ -7,13 +7,17 @@ part of 'event_bean.dart';
 // **************************************************************************
 
 TimelineModel _$TimelineModelFromJson(Map<String, dynamic> json) {
-  return TimelineModel(json['time'] as String, json['description'] as String,
+  return TimelineModel(
+      json['time'] as String,
+      json['editbeanList'] == null
+          ? null
+          : EditbeanList.fromJson(json['editbeanList'] as Map<String, dynamic>),
       json['title'] as String);
 }
 
 Map<String, dynamic> _$TimelineModelToJson(TimelineModel instance) =>
     <String, dynamic>{
       'time': instance.time,
-      'description': instance.description,
+      'editbeanList': instance.editbeanList,
       'title': instance.title
     };

@@ -2,22 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_we/beans/constant_bean.dart';
+import 'package:flutter_we/beans/edit_bean.dart';
+import 'package:flutter_we/callback/editor_callback.dart';
 import 'package:flutter_we/controllor/editor_controllor.dart';
+import 'package:flutter_we/controllor/text_controllor.dart';
 import 'package:flutter_we/pages/addproject_page.dart';
+import 'package:flutter_we/widgets/editor_widget.dart';
 
 class TextWidget extends StatefulWidget {
-  String text;
-  int index;
+  EditBean editBean;
 
-  TextWidget(
-      this.text, this.index, this.editorControllor, this.addprojectState);
-
-  EditorControllor editorControllor;
-
-  AddprojectState addprojectState;
+  final EditorCallBack editorCallBack;
 
   @override
   State<StatefulWidget> createState() => new _TextWidgetState();
+
+  TextWidget({Key key, this.editBean, this.editorCallBack}) : super(key: key);
 }
 
 class _TextWidgetState extends State<TextWidget> {
@@ -30,7 +31,7 @@ class _TextWidgetState extends State<TextWidget> {
     // TODO: implement initState
     super.initState();
     _contentController = new TextEditingController();
-    _contentController.text = widget.text;
+    _contentController.text = widget.editBean.content;
     _focusNode.addListener(_focusNodelistener);
   }
 
@@ -38,19 +39,27 @@ class _TextWidgetState extends State<TextWidget> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _focusNode.removeListener(_focusNodelistener);
-  }
+    widget.editBean.content=_contentController.text;
 
-  void updateData() {
-    widget.addprojectState.updateData();
+    widget.editorCallBack.updateEditBeanData(
+        changeType: ChangeType.update, editBean: widget.editBean);
+
+    _focusNode.removeListener(_focusNodelistener);
   }
 
   Future<Null> _focusNodelistener() async {
     if (_focusNode.hasFocus) {
-      widget.editorControllor.curIndex = widget.index;
+      widget.editorCallBack.updateCurIndex(CurEditBean: widget.editBean);
     } else {
       if (_contentController.text.isEmpty) {
-        widget.editorControllor.deleteIndex(widget.index, this);
+        widget.editorCallBack.updateEditBeanData(
+            changeType: ChangeType.delete, editBean: widget.editBean);
+      } else {
+        widget.editBean.content = _contentController.text;
+
+
+        widget.editorCallBack.updateEditBeanData(
+            changeType: ChangeType.update, editBean: widget.editBean);
       }
     }
   }
@@ -75,9 +84,9 @@ class _TextWidgetState extends State<TextWidget> {
               fontSize: 30.0,
               color: Colors.black87,
             ),
+            onChanged: _textChanged,
           ),
           flex: 18,
-
         ),
         Expanded(
           child: new Text(""),
@@ -85,5 +94,19 @@ class _TextWidgetState extends State<TextWidget> {
         ),
       ],
     );
+  }
+
+  @override
+  void didUpdateWidget(TextWidget oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void _textChanged(String value) {
+    widget.editBean.content=value;
+
+
+    widget.editorCallBack.updateEditBeanData(
+        changeType: ChangeType.update, editBean: widget.editBean);
   }
 }

@@ -9,6 +9,7 @@ import 'package:flutter_we/pages/addproject_page.dart';
 import 'package:flutter_we/utils/file_util.dart';
 import 'package:flutter_we/widgets/timeline_widget.dart';
 
+
 class WeListPage extends StatefulWidget {
   @override
   WeListPageState createState() => new WeListPageState();
@@ -17,25 +18,32 @@ class WeListPage extends StatefulWidget {
 class WeListPageState extends State<WeListPage> {
   List<TimelineModel> list = [];
 
+
+
   //可以在该方法中初始化数据
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
+
+
     eventBus
         .on<TimelineModel>()
         .listen((TimelineModel model) => onAddEvent(model));
 
-    Future<String> jsoncontentfuture = FileIo.get();
-    String a = "";
+    FileIo fileIo = FileIo.getInstance();
+
+    Future<String> jsoncontentfuture = fileIo.get();
     jsoncontentfuture.then((String jsoncontentfuture) {
-      a = jsoncontentfuture;
-      print(a);
-      Map timelineModelMap = json.decode(a);
-      var timelineModel = new TimeLineModelList.fromJson(timelineModelMap);
-      list = timelineModel.list;
-      setState(() {});
+      if (jsoncontentfuture.isEmpty) {
+        return;
+      } else {
+        Map timelineModelMap = json.decode(jsoncontentfuture);
+        var timelineModel = new TimeLineModelList.fromJson(timelineModelMap);
+        list = timelineModel.list;
+        setState(() {});
+      }
     });
   }
 
@@ -45,7 +53,8 @@ class WeListPageState extends State<WeListPage> {
 
     String js = json.encode(list);
     print("dispose:" + js);
-    FileIo.save(js);
+    FileIo fileIo = FileIo.getInstance();
+    fileIo.save(js);
 
     super.dispose();
   }
@@ -56,7 +65,7 @@ class WeListPageState extends State<WeListPage> {
 
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('wjy同學'),
+        title: new Text('we'),
       ),
       body: new Container(
         decoration: new BoxDecoration(
@@ -85,11 +94,16 @@ class WeListPageState extends State<WeListPage> {
   }
 
   onAddEvent(TimelineModel model) {
-    list.add(model);
+    setState(() {
+      list.add(model);
+    });
+
+
 
     TimeLineModelList timeLineModelList = new TimeLineModelList(list);
 
     String js = json.encode(timeLineModelList);
-    FileIo.save(js);
+    FileIo fileIo = FileIo.getInstance();
+    fileIo.save(js);
   }
 }
