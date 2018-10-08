@@ -75,4 +75,6 @@ class _EditorState extends State<Editor> implements EditorCallBack {
     // TODO: implement updateCurIndex
     widget.addProjectPageCallBack.updateCurEditbean(CurEditBean);
   }
+
+
 }

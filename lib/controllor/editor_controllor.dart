@@ -5,12 +5,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/edit_list_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
+import 'package:flutter_we/callback/listview_item_click_callback.dart';
+import 'package:flutter_we/pages/we_page.dart';
 import 'package:flutter_we/widgets/image_widget.dart';
 import 'package:flutter_we/widgets/text_widget.dart';
 import 'package:path/path.dart';
 
-class EditorControllor {
+class EditorControllor  {
   EditbeanList _editbeanList;
+
   var children;
 
   int _curIndex;
@@ -82,11 +85,14 @@ class EditorControllor {
     time=time.substring(0,time.lastIndexOf(":"));
 
     TimelineModel timelineModel =
-        new TimelineModel(time, editbeanList, "这是标题");
+        new TimelineModel(time, editbeanList, "这是标题",);
     String js = json.encode(timelineModel);
-    print("js:" + js);
+
     eventBus.fire(timelineModel);
   }
+
+
+
 
 
 }

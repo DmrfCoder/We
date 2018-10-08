@@ -12,12 +12,14 @@ TimelineModel _$TimelineModelFromJson(Map<String, dynamic> json) {
       json['editbeanList'] == null
           ? null
           : EditbeanList.fromJson(json['editbeanList'] as Map<String, dynamic>),
-      json['title'] as String);
+      json['title'] as String)
+    ..id = json['id'] as int;
 }
 
 Map<String, dynamic> _$TimelineModelToJson(TimelineModel instance) =>
     <String, dynamic>{
       'time': instance.time,
       'editbeanList': instance.editbeanList,
-      'title': instance.title
+      'title': instance.title,
+      'id': instance.id
     };

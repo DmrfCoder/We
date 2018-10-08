@@ -15,6 +15,7 @@ limitations under the License. */
 import 'package:flutter/material.dart';
 import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
+import 'package:flutter_we/callback/listview_item_click_callback.dart';
 import 'package:flutter_we/painters/timeline_painter.dart';
 
 class TimelineElement extends StatelessWidget {
@@ -27,10 +28,13 @@ class TimelineElement extends StatelessWidget {
   final Color headingColor;
   final Color descriptionColor;
 
+  final ListviewItemClickCallBack listviewItemClickCallBack;
+
   TimelineElement(
       {@required this.lineColor,
       @required this.backgroundColor,
       @required this.model,
+      @required this.listviewItemClickCallBack,
       this.firstElement = false,
       this.lastElement = false,
       this.controller,
@@ -121,25 +125,29 @@ class TimelineElement extends StatelessWidget {
   }
 
   Widget _buildRow(BuildContext context) {
-    return new Container(
-      height: 80.0,
-      color: backgroundColor,
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
-      child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          new Expanded(
-            child: _buildContentColumnTime(context),
-          ),
-          new AnimatedBuilder(
-            builder: _buildLine,
-            animation: controller,
-          ),
-          new Expanded(
-            child: _buildContentColumn(context),
-          ),
-        ],
+    return new GestureDetector(
+      child: new Container(
+        height: 80.0,
+        color: backgroundColor,
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
+        child: new Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            new Expanded(
+              child: _buildContentColumnTime(context),
+            ),
+            new AnimatedBuilder(
+              builder: _buildLine,
+              animation: controller,
+            ),
+            new Expanded(
+              child: _buildContentColumn(context),
+            ),
+          ],
+        ),
       ),
+      onLongPress: listviewItemClickCallBack.onLongPress(model.id),
+      onTap: listviewItemClickCallBack.onTap(model.id),
     );
   }
 

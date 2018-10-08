@@ -16,6 +16,7 @@ library timeline;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_we/beans/event_bean.dart';
+import 'package:flutter_we/callback/listview_item_click_callback.dart';
 import 'package:flutter_we/item/timeline_item.dart';
 
 class TimelineComponent extends StatefulWidget {
@@ -30,7 +31,9 @@ class TimelineComponent extends StatefulWidget {
 
   final Color descriptionColor;
 
-  const TimelineComponent({Key key, this.timelineList, this.lineColor, this.backgroundColor, this.headingColor, this.descriptionColor}) : super(key: key);
+  final ListviewItemClickCallBack listviewItemClickCallBack;
+
+  const TimelineComponent({Key key, this.timelineList, this.lineColor, this.backgroundColor, this.headingColor, this.descriptionColor,this.listviewItemClickCallBack}) : super(key: key);
 
   @override
   TimelineComponentState createState() {
@@ -59,6 +62,7 @@ class TimelineComponentState extends State<TimelineComponent> with SingleTickerP
     return new Container(
               child: new ListView.builder(
                 itemCount: widget.timelineList.length,
+
                 itemBuilder: (_, index) {
                   return new TimelineElement(
                     lineColor: widget.lineColor==null?Theme.of(context).accentColor:widget.lineColor,
@@ -70,6 +74,7 @@ class TimelineComponentState extends State<TimelineComponent> with SingleTickerP
                     controller: controller,
                     headingColor: widget.headingColor,
                     descriptionColor: widget.descriptionColor,
+                    listviewItemClickCallBack: widget.listviewItemClickCallBack,
                   );
                 },
               ),
