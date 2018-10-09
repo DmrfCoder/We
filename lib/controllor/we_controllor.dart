@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/beans/events_bean.dart';
 import 'package:flutter_we/callback/listview_item_click_callback.dart';
+import 'package:flutter_we/callback/timelinemodeledit_callback.dart';
 import 'package:flutter_we/pages/addproject_page.dart';
 import 'package:flutter_we/pages/we_page.dart';
 import 'package:flutter_we/utils/file_util.dart';
 
-class WeControllor implements ListviewItemClickCallBack {
+class WeControllor
+    implements ListviewItemClickCallBack, TimeLineModelEditCallBack {
   WeListPageState weListPageState;
 
   List<TimelineModel> timeLineModels = [];
@@ -17,10 +19,6 @@ class WeControllor implements ListviewItemClickCallBack {
   WeControllor(this.weListPageState);
 
   init() {
-    eventBus
-        .on<TimelineModel>()
-        .listen((TimelineModel model) => _onAddEvent(model));
-
     FileIo fileIo = FileIo.getInstance();
 
     Future<String> jsoncontentfuture = fileIo.get();
@@ -40,25 +38,6 @@ class WeControllor implements ListviewItemClickCallBack {
         }
       }
     });
-  }
-
-  _onAddEvent(TimelineModel model) {
-    if (model.id == -1) {
-      //等于-1说明该model是添加的
-      model.id = 0;
-      for (TimelineModel itemModel in timeLineModels) {
-        itemModel.id++;
-      }
-
-      timeLineModels.insert(0, model);
-    } else {
-      //否则说明该model是编辑之前的
-      timeLineModels[model.id] = model;
-    }
-
-    weListPageState.updateState(this);
-
-    dispose();
   }
 
   dispose() {
@@ -110,10 +89,41 @@ class WeControllor implements ListviewItemClickCallBack {
 
   @override
   onTap(int index) {
-    print("ontap:" + index.toString());
+
 
     weListPageState.startAddProjectPage(timeLineModels[index]);
 
     // TODO: implement onTap
+  }
+
+  @override
+  addTimelineModel(TimelineModel timelineModel) {
+    // TODO: implement addTimelineModel
+    if (timelineModel.id == -1) {
+      //等于-1说明该model是添加的
+      timelineModel.id = 0;
+      for (TimelineModel itemModel in timeLineModels) {
+        itemModel.id++;
+      }
+
+      timeLineModels.insert(0, timelineModel);
+    } else {
+      //否则说明该model是编辑之前的
+      timeLineModels[timelineModel.id] = timelineModel;
+    }
+
+    weListPageState.updateState(this);
+
+    dispose();
+  }
+
+  @override
+  deleteTimelineModel(TimelineModel timelineModel) {
+    // TODO: implement deleteTimelineModel
+
+    timeLineModels.removeAt(timelineModel.id);
+    weListPageState.updateState(this);
+
+    dispose();
   }
 }

@@ -6,17 +6,18 @@ import 'package:flutter_we/beans/constant_bean.dart';
 import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/callback/addprojet_callback.dart';
+import 'package:flutter_we/callback/timelinemodeledit_callback.dart';
 import 'package:flutter_we/controllor/editor_controllor.dart';
 import 'package:flutter_we/utils/image_picker_channel_util.dart';
 import 'package:flutter_we/widgets/editor_widget.dart';
 import 'package:dio/dio.dart';
 
 class AddProjectPage extends StatefulWidget {
-
   TimelineModel timelineModel;
 
+  TimeLineModelEditCallBack _timeLineModelEditCallBack;
 
-  AddProjectPage(this.timelineModel);
+  AddProjectPage(this.timelineModel, this._timeLineModelEditCallBack);
 
   @override
   State<StatefulWidget> createState() => new AddprojectState();
@@ -32,21 +33,20 @@ class AddprojectState extends State<AddProjectPage>
       var imageFile = await _imagePicker.pickImage(imageSource: captureMode);
       setState(() {
         _imageFile = imageFile;
-        String path=_imageFile.path;
+        String path = _imageFile.path;
         print(path);
-        String filename=path.substring(path.lastIndexOf('/'));
+        String filename = path.substring(path.lastIndexOf('/'));
         print(filename);
 
-
-
-        _editorControllor.addPicture(_imageFile.readAsStringSync(encoding: latin1));
+        _editorControllor
+            .addPicture(_imageFile.readAsStringSync(encoding: latin1));
       });
     } catch (e) {
       print(e);
     }
   }
 
-  EditorControllor _editorControllor = new EditorControllor();
+  EditorControllor _editorControllor;
 
   void onClear() {
     setState(() {
@@ -58,12 +58,12 @@ class AddprojectState extends State<AddProjectPage>
   void initState() {
     // TODO: implement initState
 
+    _editorControllor = new EditorControllor(widget._timeLineModelEditCallBack);
 
-    if(widget.timelineModel!=null){
-      _editorControllor.editType=EditType.edit;
-      _editorControllor.timelineModel=widget.timelineModel;
+    if (widget.timelineModel != null) {
+      _editorControllor.editType = EditType.edit;
+      _editorControllor.timelineModel = widget.timelineModel;
     }
-
 
     super.initState();
   }
@@ -72,7 +72,6 @@ class AddprojectState extends State<AddProjectPage>
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-
   }
 
   @override
@@ -117,7 +116,7 @@ class AddprojectState extends State<AddProjectPage>
           icon: Icon(Icons.picture_in_picture),
           onPressed: () {
             //做选择图片的操作
-           // captureImage(ImageSource.photos);
+            // captureImage(ImageSource.photos);
           }),
     );
 

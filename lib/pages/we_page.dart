@@ -72,9 +72,9 @@ class WeListPageState extends State<WeListPage> {
   }
 
   startAddProjectPage(TimelineModel timelineModel) {
-
-    Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context){
-      return  new AddProjectPage(timelineModel);
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (BuildContext context) {
+      return new AddProjectPage(timelineModel, weControllor);
     }));
   }
 }

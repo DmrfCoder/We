@@ -68,32 +68,34 @@ class TimelineElement extends StatelessWidget {
     return new Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         new Container(
           padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
           child: new Text(
-            model.title.length > 47
-                ? model.title.substring(0, 47) + "..."
-                : model.title,
+            content.length > 47
+                ? content.substring(0, 47) + "..."
+                : content,
             style: new TextStyle(
+              //background: paint,
               fontWeight: FontWeight.bold,
               color: headingColor != null ? headingColor : Colors.black,
             ),
           ),
         ),
-        new Expanded(
-          child: new Text(
-            content != null
-                ? (content.length > 50
-                    ? content.substring(0, 50) + "..."
-                    : content)
-                : content,
-            // To prevent overflowing of text to the next element, the text is truncated if greater than 75 characters
-            style: new TextStyle(
-              color: descriptionColor != null ? descriptionColor : Colors.grey,
-            ),
-          ),
-        )
+//        new Expanded(
+//          child: new Text(
+//            content != null
+//                ? (content.length > 50
+//                    ? content.substring(0, 50) + "..."
+//                    : content)
+//                : content,
+//            // To prevent overflowing of text to the next element, the text is truncated if greater than 75 characters
+//            style: new TextStyle(
+//              color: descriptionColor != null ? descriptionColor : Colors.grey,
+//            ),
+//          ),
+//        )
       ],
     );
   }
@@ -146,8 +148,8 @@ class TimelineElement extends StatelessWidget {
           ],
         ),
       ),
-      onLongPress: ()=>listviewItemClickCallBack.onLongPress(model.id),
-      onTap:()=> listviewItemClickCallBack.onTap(model.id),
+      onLongPress: () => listviewItemClickCallBack.onLongPress(model.id),
+      onTap: () => listviewItemClickCallBack.onTap(model.id),
     );
   }
 
