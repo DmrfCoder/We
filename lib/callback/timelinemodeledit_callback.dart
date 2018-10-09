@@ -4,4 +4,6 @@ abstract class TimeLineModelEditCallBack {
   addTimelineModel(TimelineModel timelineModel);
 
   deleteTimelineModel(TimelineModel timelineModel);
+
+  updateTimelineModel(TimelineModel timelineModel);
 }

@@ -126,6 +126,7 @@ class EditorControllor {
       if (emptyFlag) {
         return;
       }
+
       DateTime now = new DateTime.now();
       String time = now.toString();
       time = time.substring(0, time.lastIndexOf(":"));
@@ -139,11 +140,12 @@ class EditorControllor {
 
       _timeLineModelEditCallBack.addTimelineModel(timelineModel);
     } else {
+
       _timelineModel.editbeanList = editbeanList;
       if (emptyFlag) {
         _timeLineModelEditCallBack.deleteTimelineModel(_timelineModel);
       } else {
-        _timeLineModelEditCallBack.addTimelineModel(_timelineModel);
+        _timeLineModelEditCallBack.updateTimelineModel(_timelineModel);
       }
     }
   }

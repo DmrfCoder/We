@@ -89,8 +89,6 @@ class WeControllor
 
   @override
   onTap(int index) {
-
-
     weListPageState.startAddProjectPage(timeLineModels[index]);
 
     // TODO: implement onTap
@@ -99,18 +97,14 @@ class WeControllor
   @override
   addTimelineModel(TimelineModel timelineModel) {
     // TODO: implement addTimelineModel
-    if (timelineModel.id == -1) {
-      //等于-1说明该model是添加的
-      timelineModel.id = 0;
-      for (TimelineModel itemModel in timeLineModels) {
-        itemModel.id++;
-      }
 
-      timeLineModels.insert(0, timelineModel);
-    } else {
-      //否则说明该model是编辑之前的
-      timeLineModels[timelineModel.id] = timelineModel;
+    //等于-1说明该model是添加的
+    timelineModel.id = 0;
+    for (TimelineModel itemModel in timeLineModels) {
+      itemModel.id++;
     }
+
+    timeLineModels.insert(0, timelineModel);
 
     weListPageState.updateState(this);
 
@@ -122,6 +116,15 @@ class WeControllor
     // TODO: implement deleteTimelineModel
 
     timeLineModels.removeAt(timelineModel.id);
+    weListPageState.updateState(this);
+
+    dispose();
+  }
+
+  @override
+  updateTimelineModel(TimelineModel timelineModel) {
+    // TODO: implement updateTimelineModel
+    timeLineModels[timelineModel.id] = timelineModel;
     weListPageState.updateState(this);
 
     dispose();
