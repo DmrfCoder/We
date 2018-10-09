@@ -12,7 +12,7 @@ import 'package:flutter_we/utils/file_util.dart';
 class WeControllor implements ListviewItemClickCallBack {
   WeListPageState weListPageState;
 
-  List<TimelineModel> list = [];
+  List<TimelineModel> timeLineModels = [];
 
   WeControllor(this.weListPageState);
 
@@ -31,7 +31,7 @@ class WeControllor implements ListviewItemClickCallBack {
         try {
           Map timelineModelMap = json.decode(jsoncontentfuture);
           var timelineModel = new TimeLineModelList.fromJson(timelineModelMap);
-          list = timelineModel.list;
+          timeLineModels = timelineModel.list;
 
           weListPageState.updateState(this);
         } catch (e) {
@@ -43,17 +43,18 @@ class WeControllor implements ListviewItemClickCallBack {
   }
 
   _onAddEvent(TimelineModel model) {
-
-    if(model.id==-1){
+    if (model.id == -1) {
       //等于-1说明该model是添加的
-      model.id = list.length;
-      list.add(model);
-    }else{
+      model.id = 0;
+      for (TimelineModel itemModel in timeLineModels) {
+        itemModel.id++;
+      }
+
+      timeLineModels.insert(0, model);
+    } else {
       //否则说明该model是编辑之前的
-      list[model.id]=model;
-
+      timeLineModels[model.id] = model;
     }
-
 
     weListPageState.updateState(this);
 
@@ -61,7 +62,7 @@ class WeControllor implements ListviewItemClickCallBack {
   }
 
   dispose() {
-    TimeLineModelList timeLineModelList = new TimeLineModelList(list);
+    TimeLineModelList timeLineModelList = new TimeLineModelList(timeLineModels);
 
     String js = json.encode(timeLineModelList);
     FileIo fileIo = FileIo.getInstance();
@@ -98,9 +99,9 @@ class WeControllor implements ListviewItemClickCallBack {
   }
 
   deleteIndex(int index) {
-    list.removeAt(index);
-    for (int i = index; i < list.length; i++) {
-      list[i].id = i;
+    timeLineModels.removeAt(index);
+    for (int i = index; i < timeLineModels.length; i++) {
+      timeLineModels[i].id = i;
     }
 
     weListPageState.updateState(this);
@@ -111,7 +112,7 @@ class WeControllor implements ListviewItemClickCallBack {
   onTap(int index) {
     print("ontap:" + index.toString());
 
-    weListPageState.startAddProjectPage(list[index]);
+    weListPageState.startAddProjectPage(timeLineModels[index]);
 
     // TODO: implement onTap
   }

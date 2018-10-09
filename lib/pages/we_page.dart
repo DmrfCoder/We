@@ -59,7 +59,7 @@ class WeListPageState extends State<WeListPage> {
           ),
         ),
         child: new TimelineComponent(
-          timelineList: weControllor.list,
+          timelineList: weControllor.timeLineModels,
           listviewItemClickCallBack: weControllor,
         ),
       ),
