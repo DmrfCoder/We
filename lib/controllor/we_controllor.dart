@@ -27,21 +27,30 @@ class WeControllor implements ListviewItemClickCallBack {
       if (jsoncontentfuture.isEmpty) {
         return;
       } else {
-        Map timelineModelMap = json.decode(jsoncontentfuture);
-        var timelineModel = new TimeLineModelList.fromJson(timelineModelMap);
-        list = timelineModel.list;
-        weListPageState.setState(() {});
+        try {
+          Map timelineModelMap = json.decode(jsoncontentfuture);
+          var timelineModel = new TimeLineModelList.fromJson(timelineModelMap);
+          list = timelineModel.list;
+
+          weListPageState.updateState(this);
+        } catch (e) {
+          print('error:' + e.toString() + " , content: " + jsoncontentfuture);
+          return;
+        }
       }
     });
   }
 
   _onAddEvent(TimelineModel model) {
     model.id = list.length;
+    list.add(model);
 
-    weListPageState.setState(() {
-      list.add(model);
-    });
+    weListPageState.updateState(this);
 
+    dispose();
+  }
+
+  dispose() {
     TimeLineModelList timeLineModelList = new TimeLineModelList(list);
 
     String js = json.encode(timeLineModelList);
@@ -49,45 +58,47 @@ class WeControllor implements ListviewItemClickCallBack {
     fileIo.save(js);
   }
 
-  dispose(){
-    String js = json.encode(list);
-    print("dispose:" + js);
-    FileIo fileIo = FileIo.getInstance();
-    fileIo.save(js);
-  }
-
   @override
   onLongPress(int index) {
     // TODO: implement onLongPress
-    showDialog(
-        context: weListPageState.context,
-        builder: (BuildContext ctx) {
-          return new SimpleDialog(
-            title: new Text("确认删除该条目？"),
-            children: <Widget>[
-              new SimpleDialogOption(
-                onPressed: () {
+    weListPageState.setState(() {
+      showDialog(
+          context: weListPageState.context,
+          builder: (BuildContext ctx) {
+            return new SimpleDialog(
+              title: new Text("确认删除该条目？"),
+              children: <Widget>[
+                new SimpleDialogOption(
+                  onPressed: () {
+                    deleteIndex(index);
+                    Navigator.pop(weListPageState.context);
+                  },
+                  child: const Text('确定'),
+                ),
+                new SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(weListPageState.context);
+                  },
+                  child: const Text('取消'),
+                ),
+              ],
+            );
+          });
+    });
+  }
 
-                  Navigator.pop(weListPageState.context);
-                },
-                child: const Text('确定'),
-              ),
-              new SimpleDialogOption(
-                onPressed: () {
-                  Navigator.pop(weListPageState.context);
-                },
-                child: const Text('取消'),
-              ),
-            ],
-          );
-        });
+  deleteIndex(int index) {
+    list.removeAt(index);
+    for (int i = index; i < list.length; i++) {
+      list[i].id = i;
+    }
 
+    weListPageState.updateState(this);
+    dispose();
   }
 
   @override
   onTap(int index) {
     // TODO: implement onTap
   }
-
-
 }

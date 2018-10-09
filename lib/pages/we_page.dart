@@ -37,6 +37,16 @@ class WeListPageState extends State<WeListPage> {
     super.dispose();
   }
 
+
+
+
+
+  updateState(WeControllor state) {
+    setState(() {
+      weControllor = state;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -71,4 +81,6 @@ class WeListPageState extends State<WeListPage> {
       return new AddProjectPage();
     }));
   }
+
+
 }

@@ -59,6 +59,9 @@ class TimelineComponentState extends State<TimelineComponent> with SingleTickerP
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return new Container(
               child: new ListView.builder(
                 itemCount: widget.timelineList.length,

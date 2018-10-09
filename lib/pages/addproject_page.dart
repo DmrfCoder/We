@@ -68,7 +68,7 @@ class AddprojectState extends State<AddProjectPage>
 
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('wjy同學'),
+        title: new Text('we'),
         actions: <Widget>[_BuildInsertPicture(), _BuildSaveButton()],
       ),
       body: new Container(

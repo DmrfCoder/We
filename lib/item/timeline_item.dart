@@ -146,8 +146,8 @@ class TimelineElement extends StatelessWidget {
           ],
         ),
       ),
-      onLongPress: listviewItemClickCallBack.onLongPress(model.id),
-      onTap: listviewItemClickCallBack.onTap(model.id),
+      onLongPress: ()=>listviewItemClickCallBack.onLongPress(model.id),
+      onTap:()=> listviewItemClickCallBack.onTap(model.id),
     );
   }
 
