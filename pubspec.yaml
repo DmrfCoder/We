@@ -60,6 +60,7 @@ flutter:
   - images/mainbackground.png
   - images/edit_back.png
   - images/we_icon.png
+  - images/hert.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
