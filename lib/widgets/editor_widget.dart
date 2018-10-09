@@ -25,12 +25,16 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> implements EditorCallBack {
-  var children = <Widget>[];
+
 
   @override
   Widget build(BuildContext context) {
+    var children = <Widget>[];
+
     for (EditBean editbean in widget.list) {
       if (editbean.isText) {
+
+
         children.add(new TextWidget(
           editBean: editbean,
           editorCallBack: this,

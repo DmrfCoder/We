@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_we/beans/constant_bean.dart';
 import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/callback/addprojet_callback.dart';
@@ -11,6 +12,12 @@ import 'package:flutter_we/widgets/editor_widget.dart';
 import 'package:dio/dio.dart';
 
 class AddProjectPage extends StatefulWidget {
+
+  TimelineModel timelineModel;
+
+
+  AddProjectPage(this.timelineModel);
+
   @override
   State<StatefulWidget> createState() => new AddprojectState();
 }
@@ -50,6 +57,14 @@ class AddprojectState extends State<AddProjectPage>
   @override
   void initState() {
     // TODO: implement initState
+
+
+    if(widget.timelineModel!=null){
+      _editorControllor.editType=EditType.edit;
+      _editorControllor.timelineModel=widget.timelineModel;
+    }
+
+
     super.initState();
   }
 

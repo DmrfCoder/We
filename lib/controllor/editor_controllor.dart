@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_we/beans/constant_bean.dart';
 import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/edit_list_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
@@ -11,10 +12,26 @@ import 'package:flutter_we/widgets/image_widget.dart';
 import 'package:flutter_we/widgets/text_widget.dart';
 import 'package:path/path.dart';
 
-class EditorControllor  {
+class EditorControllor {
   EditbeanList _editbeanList;
 
+  TimelineModel _timelineModel;
+
   var children;
+
+  EditType _editType;
+
+  EditType get editType => _editType;
+
+  set editType(EditType value) {
+    _editType = value;
+  }
+
+  set timelineModel(TimelineModel value) {
+    _timelineModel = value;
+    _editbeanList=_timelineModel.editbeanList;
+
+  }
 
   int _curIndex;
 
@@ -42,6 +59,8 @@ class EditorControllor  {
     children = <Widget>[];
 
     _editbeanList.addEditBean("", _curIndex, true);
+
+    _editType = EditType.add;
   }
 
   EditbeanList get editbeanList => _editbeanList;
@@ -80,19 +99,22 @@ class EditorControllor  {
   }
 
   dispose() {
-    DateTime now = new DateTime.now();
-    String time=now.toString();
-    time=time.substring(0,time.lastIndexOf(":"));
+    if (_editType == EditType.add) {
+      DateTime now = new DateTime.now();
+      String time = now.toString();
+      time = time.substring(0, time.lastIndexOf(":"));
 
-    TimelineModel timelineModel =
-        new TimelineModel(time, editbeanList, "这是标题",);
-    String js = json.encode(timelineModel);
+      TimelineModel timelineModel = new TimelineModel(
+        time,
+        editbeanList,
+        "这是标题",
+      );
+      String js = json.encode(timelineModel);
 
-    eventBus.fire(timelineModel);
+      eventBus.fire(timelineModel);
+    } else {
+      _timelineModel.editbeanList = editbeanList;
+      eventBus.fire(_timelineModel);
+    }
   }
-
-
-
-
-
 }

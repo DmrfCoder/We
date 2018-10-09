@@ -49,18 +49,18 @@ class _TextWidgetState extends State<TextWidget> {
 
   Future<Null> _focusNodelistener() async {
     if (_focusNode.hasFocus) {
-      widget.editorCallBack.updateCurIndex(CurEditBean: widget.editBean);
+    //  widget.editorCallBack.updateCurIndex(CurEditBean: widget.editBean);
     } else {
-      if (_contentController.text.isEmpty) {
-        widget.editorCallBack.updateEditBeanData(
-            changeType: ChangeType.delete, editBean: widget.editBean);
-      } else {
-        widget.editBean.content = _contentController.text;
-
-
-        widget.editorCallBack.updateEditBeanData(
-            changeType: ChangeType.update, editBean: widget.editBean);
-      }
+//      if (_contentController.text.isEmpty) {
+//        widget.editorCallBack.updateEditBeanData(
+//            changeType: ChangeType.delete, editBean: widget.editBean);
+//      } else {
+//        widget.editBean.content = _contentController.text;
+//
+//
+//        widget.editorCallBack.updateEditBeanData(
+//            changeType: ChangeType.update, editBean: widget.editBean);
+//      }
     }
   }
 

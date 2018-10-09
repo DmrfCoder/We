@@ -37,10 +37,6 @@ class WeListPageState extends State<WeListPage> {
     super.dispose();
   }
 
-
-
-
-
   updateState(WeControllor state) {
     setState(() {
       weControllor = state;
@@ -68,19 +64,17 @@ class WeListPageState extends State<WeListPage> {
         ),
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: navigateToMovieDetailPage,
+        onPressed: () => startAddProjectPage(null),
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ),
     );
   }
 
-  navigateToMovieDetailPage() {
-    Navigator.of(context)
-        .push(new MaterialPageRoute(builder: (BuildContext context) {
-      return new AddProjectPage();
+  startAddProjectPage(TimelineModel timelineModel) {
+
+    Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context){
+      return  new AddProjectPage(timelineModel);
     }));
   }
-
-
 }

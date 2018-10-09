@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/beans/events_bean.dart';
 import 'package:flutter_we/callback/listview_item_click_callback.dart';
+import 'package:flutter_we/pages/addproject_page.dart';
 import 'package:flutter_we/pages/we_page.dart';
 import 'package:flutter_we/utils/file_util.dart';
 
@@ -42,8 +43,17 @@ class WeControllor implements ListviewItemClickCallBack {
   }
 
   _onAddEvent(TimelineModel model) {
-    model.id = list.length;
-    list.add(model);
+
+    if(model.id==-1){
+      //等于-1说明该model是添加的
+      model.id = list.length;
+      list.add(model);
+    }else{
+      //否则说明该model是编辑之前的
+      list[model.id]=model;
+
+    }
+
 
     weListPageState.updateState(this);
 
@@ -99,6 +109,10 @@ class WeControllor implements ListviewItemClickCallBack {
 
   @override
   onTap(int index) {
+    print("ontap:" + index.toString());
+
+    weListPageState.startAddProjectPage(list[index]);
+
     // TODO: implement onTap
   }
 }
