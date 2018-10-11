@@ -43,6 +43,10 @@ class WeControllor
   dispose() {
     TimeLineModelList timeLineModelList = new TimeLineModelList(timeLineModels);
 
+
+      json.encode(timeLineModelList.list[0]);
+      timeLineModelList.list.length;
+
     String js = json.encode(timeLineModelList);
     FileIo fileIo = FileIo.getInstance();
     fileIo.save(js);
