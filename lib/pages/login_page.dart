@@ -29,7 +29,7 @@ class _LoginState extends State<LoginPage> {
   String _userid = "";
 
   String PHONE_KEY = "phone_number";
-  String PASSWORD_kEY = "phone_number";
+  String PASSWORD_kEY = "password_number";
 
   void _checkInput() {
     if (_phoneController.text.isNotEmpty &&
@@ -232,16 +232,17 @@ class _LoginState extends State<LoginPage> {
   putSpInfo() async {
     SharePreferenceUtil sharePreferenceUtil =
         await SharePreferenceUtil.getInstance();
+
     sharePreferenceUtil.putString(PHONE_KEY, _phoneController.text);
     sharePreferenceUtil.putString(PASSWORD_kEY, _passwordController.text);
   }
 
   navigateToWeListPage() {
     putSpInfo();
-    Navigator.of(context)
-        .push(new MaterialPageRoute(builder: (BuildContext context) {
+    Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (BuildContext context) {
       return new WeListPage();
-    }));
+    }), (route) => route == null);
+
   }
 
   void _openSignUp() {
