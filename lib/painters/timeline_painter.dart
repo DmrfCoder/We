@@ -15,6 +15,7 @@ limitations under the License. */
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 
 
 class TimelinePainter extends CustomPainter {
@@ -25,18 +26,17 @@ class TimelinePainter extends CustomPainter {
   final Animation<double> controller;
   final Animation<double> height;
 
-  TimelinePainter(
-      {@required this.lineColor,
-      @required this.backgroundColor,
-      this.firstElement = false,
-      this.lastElement = false,
-      this.controller})
+  TimelinePainter({@required this.lineColor,
+    @required this.backgroundColor,
+    this.firstElement = false,
+    this.lastElement = false,
+    this.controller})
       : height = new Tween(begin: 0.0, end: 1.0).animate(
-          new CurvedAnimation(
-            parent: controller,
-            curve: new Interval(0.45, 1.0, curve: Curves.ease),
-          ),
-        ),
+    new CurvedAnimation(
+      parent: controller,
+      curve: new Interval(0.45, 1.0, curve: Curves.ease),
+    ),
+  ),
         super(repaint: controller);
 
   @override
@@ -63,13 +63,13 @@ class TimelinePainter extends CustomPainter {
       Offset offsetTopCenter = size.topCenter(new Offset(0.0, 0.0));
       Offset offsetCenter = size.center(new Offset(0.0, -4.0));
       Offset renderOffset =
-          new Offset(offsetCenter.dx, offsetCenter.dy * controller.value);
+      new Offset(offsetCenter.dx, offsetCenter.dy * controller.value);
       canvas.drawLine(offsetTopCenter, renderOffset, lineStroke);
     } else {
       Offset offsetTopCenter = size.topCenter(new Offset(0.0, 0.0));
       Offset offsetBottom = size.bottomCenter(new Offset(0.0, 0.0));
       Offset renderOffset =
-          new Offset(offsetBottom.dx, offsetBottom.dy * controller.value);
+      new Offset(offsetBottom.dx, offsetBottom.dy * controller.value);
       canvas.drawLine(offsetTopCenter, renderOffset, lineStroke);
     }
 
@@ -78,10 +78,7 @@ class TimelinePainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
 
-
-
-
-    canvas.drawCircle(size.center(new Offset(0.0, -8.0)), 6.0, circleFill);
+     canvas.drawCircle(size.center(new Offset(0.0, 0.0)), 6.0, circleFill);
   }
 
   @override

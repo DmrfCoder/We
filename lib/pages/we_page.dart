@@ -52,25 +52,79 @@ class WeListPageState extends State<WeListPage> {
     // TODO: implement build
 
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('we'),
+      drawer: new Drawer(
+        child: new Column(
+          children: <Widget>[
+            new UserAccountsDrawerHeader(
+                decoration: new BoxDecoration(
+                    image: new DecorationImage(
+                        image: new NetworkImage(
+                            "http://t2.hddhhn.com/uploads/tu/201612/98/st93.png")
+                    )),
+                accountName: new Text("demo"),
+                accountEmail: new Text("demo@gmail.com"),
+            ),
+            new Row(
+              children: <Widget>[
+                new Container(
+                  padding: EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: new Text("自动备份数据"),
+                ),
+                new Switch(
+                    value: true,
+                    onChanged: (value) {
+                      print(value.toString());
+                    }),
+              ],
+            ),
+            new Row(
+              children: <Widget>[
+                new Container(
+                  padding: EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: new Text("退出登陆"),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-      body: new Container(
-        decoration: new BoxDecoration(
-          image: new DecorationImage(
-            image: new ExactAssetImage('images/mainbackground.png'),
-            fit: BoxFit.cover,
+      body: new Stack(
+        children: <Widget>[
+          new Container(
+            decoration: new BoxDecoration(
+                image: new DecorationImage(
+              image: new AssetImage("images/login_signup_background.jpg"),
+              fit: BoxFit.cover,
+            )),
           ),
-        ),
-        child: new TimelineComponent(
-          timelineList: weControllor.timeLineModels,
-          listviewItemClickCallBack: weControllor,
-        ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: () => startAddProjectPage(null),
-        tooltip: 'Increment',
-        child: new Icon(Icons.add),
+          new Column(
+            children: <Widget>[
+              new Center(
+                child: new Container(
+                  padding: const EdgeInsets.only(top: 32.0),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.9,
+                  child: new TimelineComponent(
+                    timelineList: weControllor.timeLineModels,
+                    listviewItemClickCallBack: weControllor,
+                    lineColor: Colors.black,
+                  ),
+                ),
+              ),
+              new Center(
+                  child: new Container(
+                child: new FloatingActionButton(
+                  onPressed: () => startAddProjectPage(null),
+                  tooltip: 'Increment',
+                  child: new Icon(Icons.add),
+                  backgroundColor: Colors.black,
+                ),
+              ))
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -81,4 +135,10 @@ class WeListPageState extends State<WeListPage> {
       return new AddProjectPage(timelineModel, weControllor);
     }));
   }
+
+//    new TimelineComponent(
+//      timelineList: weControllor.timeLineModels,
+//      listviewItemClickCallBack: weControllor,
+//    ),
+
 }

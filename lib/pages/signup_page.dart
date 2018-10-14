@@ -120,17 +120,8 @@ class _SignUpState extends State<SignUpPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            new Container(
-              child: new BackButton(),
-              alignment: Alignment.centerLeft,
-            ),
-            new Container(
-              child: new Text(
-                "  注册账户",
-                textScaleFactor: 2.0,
-              ),
-              alignment: Alignment.centerLeft,
-            ),
+
+
             new Container(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: new Column(
@@ -141,47 +132,57 @@ class _SignUpState extends State<SignUpPage> {
                         child: new TextField(
                           controller: _phoneController,
                           keyboardType: TextInputType.phone,
+                          cursorColor: Colors.black,
                           decoration: new InputDecoration(
                             hintText: '手机号码',
                             errorText: _correctPhone ? null : '号码的长度应该在7到12位之间',
                             icon: new Icon(
                               Icons.phone,
-                              color: Theme.of(context).iconTheme.color,
+                              color: Colors.white,
                             ),
                           ),
                           onSubmitted: (value) {
                             _checkInput();
                           },
                         ),
-                      ),
-                      new TextField(
+                                        ),
+
+                      new Container(
+                      padding: const EdgeInsets.only(top: 32.0),
+                      child:new TextField(
                         controller: _usernameController,
+                        cursorColor: Colors.black,
                         decoration: new InputDecoration(
                           hintText: '用户名称',
                           icon: new Icon(
                             Icons.account_circle,
-                            color: Theme.of(context).iconTheme.color,
+                            color: Colors.white,
                           ),
                         ),
                         onSubmitted: (value) {
                           _checkInput();
                         },
                       ),
-                      new TextField(
+                      ),
+                      new Container(
+                      padding: const EdgeInsets.only(top: 32.0),
+                      child:new TextField(
                         controller: _passwordController,
                         obscureText: true,
                         keyboardType: TextInputType.text,
+                        cursorColor: Colors.black,
                         decoration: new InputDecoration(
                           hintText: '密码',
                           icon: new Icon(
                             Icons.lock_outline,
-                            color: Theme.of(context).iconTheme.color,
+                            color: Colors.white,
                           ),
                         ),
                         onSubmitted: (value) {
                           _checkInput();
                         },
                       ),
+                      )
                     ])),
             new Center(
               child: new Container(
@@ -210,7 +211,7 @@ class _SignUpState extends State<SignUpPage> {
             ),
             new Center(
                 child: new FlatButton(
-              child: new Text("已经有账户了？ 登录"),
+              child: new Text("已经有账户了？ 登录",style: new TextStyle(color: Colors.black38)),
               onPressed: () {
                 Navigator.of(context).pop();
               },

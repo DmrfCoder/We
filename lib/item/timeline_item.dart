@@ -71,11 +71,8 @@ class TimelineElement extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         new Container(
-          padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
           child: new Text(
-            content.length > 47
-                ? content.substring(0, 47) + "..."
-                : content,
+            content.length > 47 ? content.substring(0, 47) + "..." : content,
             style: new TextStyle(
               //background: paint,
               fontWeight: FontWeight.bold,
@@ -110,7 +107,6 @@ class TimelineElement extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         new Container(
-          padding: const EdgeInsets.only(bottom: 8.0),
           child: new Text(
             model.time.length > 47
                 ? model.time.substring(0, 47) + "..."
@@ -134,6 +130,7 @@ class TimelineElement extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
         child: new Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             new Expanded(
               child: _buildContentColumnTime(context),

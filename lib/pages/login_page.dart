@@ -161,6 +161,7 @@ class _LoginState extends State<LoginPage> {
                           child: new TextField(
                             controller: _phoneController,
                             keyboardType: TextInputType.phone,
+                            cursorColor: Colors.black,
                             decoration: new InputDecoration(
                               hintText: '手机号码',
                               errorText:
@@ -178,6 +179,7 @@ class _LoginState extends State<LoginPage> {
                             controller: _passwordController,
                             obscureText: true,
                             keyboardType: TextInputType.text,
+                            cursorColor: Colors.black,
                             decoration: new InputDecoration(
                               hintText: '密码',
                               errorText: _correctPassword ? null : '密码的长度需大于6位',
