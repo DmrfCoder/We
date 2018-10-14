@@ -95,4 +95,19 @@ class HttpUtil {
 
     return dataResponseInfoBean;
   }
+
+  static updateData(TimelineModel model) async {
+    String url = "http://javacloud.bmob.cn/ff9f06fde1813232/updateData";
+
+    var c = {"objectId": model.id, "content": json.encode(model.editbeanList)};
+
+    Response response = await _post(url, c);
+    DataResponseInfoBean dataResponseInfoBean;
+    dataResponseInfoBean = new DataResponseInfoBean(
+      result: response.data["result"],
+      desc: response.data["desc"],
+    );
+
+    return dataResponseInfoBean;
+  }
 }

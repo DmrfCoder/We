@@ -145,8 +145,8 @@ class WeControllor
 
     weListPageState.updateState(this);
 
-    DataResponseInfoBean dataResponseInfoBean = await HttpUtil.uploadData(
-        timelineModel: timelineModel, userId: userid);
+    DataResponseInfoBean dataResponseInfoBean =
+        await HttpUtil.uploadData(timelineModel: timelineModel, userId: userid);
 
     if (dataResponseInfoBean.result) {
       timelineModel.id = dataResponseInfoBean.objectId;
@@ -169,7 +169,7 @@ class WeControllor
   }
 
   @override
-  updateTimelineModel(TimelineModel timelineModel) {
+  updateTimelineModel(TimelineModel timelineModel) async {
     // TODO: implement updateTimelineModel
 
     for (TimelineModel model in timeLineModels) {
@@ -179,6 +179,13 @@ class WeControllor
     }
 
     weListPageState.updateState(this);
+
+    DataResponseInfoBean dataResponseInfoBean= await HttpUtil.updateData(timelineModel);
+    if(dataResponseInfoBean.result){
+      print("update data success");
+    }else{
+      print("update data faild");
+    }
 
     dispose();
   }
