@@ -132,15 +132,13 @@ class EditorControllor {
       time = time.substring(0, time.lastIndexOf(":"));
 
       TimelineModel timelineModel = new TimelineModel(
-        time,
-        editbeanList,
-        "这是标题",
+        time: time,
+        editbeanList: editbeanList,
       );
       String js = json.encode(timelineModel);
 
       _timeLineModelEditCallBack.addTimelineModel(timelineModel);
     } else {
-
       _timelineModel.editbeanList = editbeanList;
       if (emptyFlag) {
         _timeLineModelEditCallBack.deleteTimelineModel(_timelineModel);

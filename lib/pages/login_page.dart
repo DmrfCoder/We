@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_we/beans/responseinfo_bean.dart';
+import 'package:flutter_we/beans/user_responseinfo_bean.dart';
 import 'package:flutter_we/pages/signup_page.dart';
 import 'package:flutter_we/pages/we_page.dart';
 import 'package:flutter_we/utils/http_util.dart';
@@ -74,7 +74,7 @@ class _LoginState extends State<LoginPage> {
     }
 
     showProgress = true;
-    ResponseInfoBean value = await HttpUtil.login(
+    UserResponseInfoBean value = await HttpUtil.login(
         phonenumber: _phoneController.text, password: _passwordController.text);
 
     if (value.result) {
@@ -90,7 +90,7 @@ class _LoginState extends State<LoginPage> {
           bgcolor: "#e74c3c",
           textcolor: '#ffffff');
 
-      navigateToWeListPage();
+      navigateToWeListPage(value.userid);
     } else {
       setState(() {
         showProgress = false;
@@ -237,12 +237,12 @@ class _LoginState extends State<LoginPage> {
     sharePreferenceUtil.putString(PASSWORD_kEY, _passwordController.text);
   }
 
-  navigateToWeListPage() {
+  navigateToWeListPage(String userid) {
     putSpInfo();
-    Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (BuildContext context) {
-      return new WeListPage();
+    Navigator.pushAndRemoveUntil(context,
+        new MaterialPageRoute(builder: (BuildContext context) {
+      return new WeListPage(userid);
     }), (route) => route == null);
-
   }
 
   void _openSignUp() {

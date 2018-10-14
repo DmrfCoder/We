@@ -11,6 +11,10 @@ import 'package:flutter_we/utils/file_util.dart';
 import 'package:flutter_we/widgets/timeline_widget.dart';
 
 class WeListPage extends StatefulWidget {
+  String userid;
+
+  WeListPage(this.userid);
+
   @override
   WeListPageState createState() => new WeListPageState();
 }

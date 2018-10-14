@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_we/beans/responseinfo_bean.dart';
+import 'package:flutter_we/beans/user_responseinfo_bean.dart';
 import 'package:flutter_we/utils/http_util.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -38,7 +38,7 @@ class _SignUpState extends State<SignUpPage> {
     }
 
     showProgress = true;
-    ResponseInfoBean value = await HttpUtil.signup(
+    UserResponseInfoBean value = await HttpUtil.signup(
         phonenumber: _phoneController.text,
         password: _passwordController.text,
         nickname: _usernameController.text);

@@ -14,18 +14,9 @@ class TimelineModel {
 
   String title;
 
-  int _id;
+  String id = "-1";
 
-
-  int get id => _id;
-
-  set id(int value) {
-    _id = value;
-  }
-
-  TimelineModel(this.time, this.editbeanList, this.title){
-    _id=-1;
-  }
+  TimelineModel({this.time, this.editbeanList, this.title, this.id}) ;
 
   factory TimelineModel.fromJson(Map<String, dynamic> json) =>
       _$TimelineModelFromJson(json);
