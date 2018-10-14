@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_we/beans/responseinfo_bean.dart';
 import 'package:flutter_we/pages/signup_page.dart';
 import 'package:flutter_we/pages/we_page.dart';
 import 'package:flutter_we/utils/http_util.dart';
+import 'package:flutter_we/utils/share_preferences_util.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -19,30 +24,131 @@ class _LoginState extends State<LoginPage> {
   bool _correctPhone = true;
   bool _correctPassword = true;
 
+  bool showProgress = false;
+
+  String _userid = "";
+
+  String PHONE_KEY = "phone_number";
+  String PASSWORD_kEY = "phone_number";
+
+  void _checkInput() {
+    if (_phoneController.text.isNotEmpty &&
+        (_phoneController.text.trim().length < 7 ||
+            _phoneController.text.trim().length > 12)) {
+      _correctPhone = false;
+    } else {
+      _correctPhone = true;
+    }
+    if (_passwordController.text.isNotEmpty &&
+        _passwordController.text.trim().length < 6) {
+      _correctPassword = false;
+    } else {
+      _correctPassword = true;
+    }
+    setState(() {});
+  }
+
+  Future _handleSubmitted() async {
+    bool check = true;
+
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _checkInput();
+    if (_phoneController.text == '' || _passwordController.text == '') {
+      Fluttertoast.showToast(
+          msg: "登录信息填写不完整",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          bgcolor: "#e74c3c",
+          textcolor: '#ffffff');
+      check = false;
+    } else if (!_correctPhone || !_correctPassword) {
+      Fluttertoast.showToast(
+          msg: "登录信息的格式不正确",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          bgcolor: "#e74c3c",
+          textcolor: '#ffffff');
+      check = false;
+    }
+
+    showProgress = true;
+    ResponseInfoBean value = await HttpUtil.login(
+        phonenumber: _phoneController.text, password: _passwordController.text);
+
+    if (value.result) {
+      setState(() {
+        showProgress = false;
+      });
+
+      Fluttertoast.showToast(
+          msg: "登陆成功！",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          bgcolor: "#e74c3c",
+          textcolor: '#ffffff');
+
+      navigateToWeListPage();
+    } else {
+      setState(() {
+        showProgress = false;
+      });
+
+      Fluttertoast.showToast(
+          msg: value.desc,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          bgcolor: "#e74c3c",
+          textcolor: '#ffffff');
+    }
+  }
+
+  _buildProgress() {
+    if (showProgress) {
+      return new Center(
+          child: new CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation(Colors.pink),
+      ));
+    } else {
+      return Center();
+    }
+  }
+
+  _getSpInfo() async {
+    SharePreferenceUtil sharePreferenceUtil =
+        await SharePreferenceUtil.getInstance();
+    _phoneController.text = sharePreferenceUtil.getString(PHONE_KEY);
+    _passwordController.text = sharePreferenceUtil.getString(PASSWORD_kEY);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+    _getSpInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Scaffold(
         key: _scaffoldKey,
         body: new Stack(children: <Widget>[
-          new GestureDetector(
-              onTap: () {
-                FocusScope.of(context).requestFocus(new FocusNode());
-                // _checkInput();
-              },
-              child: new Container(
-                decoration: new BoxDecoration(
-                    image: new DecorationImage(
-                  //image: new NetworkImage('http://wx4.sinaimg.cn/mw690/74f1d0degy1fvqsvynnv4j20lc0u07gw.jpg'),
-                  image: new AssetImage("images/login_signup_background.jpg"),
-
-                  fit: BoxFit.cover,
-                  //centerSlice: new Rect.fromLTRB(270.0, 180.0, 1360.0, 730.0),
-                )),
-              )),
+          new Container(
+            decoration: new BoxDecoration(
+                image: new DecorationImage(
+              image: new AssetImage("images/login_signup_background.jpg"),
+              fit: BoxFit.cover,
+            )),
+          ),
           new Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly, //垂直方向对其方式
+            crossAxisAlignment: CrossAxisAlignment.start, //水平方向对其方式
+
             children: <Widget>[
               new Center(
                 child: new Container(
@@ -118,50 +224,20 @@ class _LoginState extends State<LoginPage> {
                     onPressed: _openSignUp),
               ),
             ],
-          )
+          ),
+          _buildProgress(),
         ]));
   }
 
-  void _checkInput() {
-    if (_phoneController.text.isNotEmpty &&
-        (_phoneController.text.trim().length < 7 ||
-            _phoneController.text.trim().length > 12)) {
-      _correctPhone = false;
-    } else {
-      _correctPhone = true;
-    }
-    if (_passwordController.text.isNotEmpty &&
-        _passwordController.text.trim().length < 6) {
-      _correctPassword = false;
-    } else {
-      _correctPassword = true;
-    }
-    setState(() {});
+  putSpInfo() async {
+    SharePreferenceUtil sharePreferenceUtil =
+        await SharePreferenceUtil.getInstance();
+    sharePreferenceUtil.putString(PHONE_KEY, _phoneController.text);
+    sharePreferenceUtil.putString(PASSWORD_kEY, _passwordController.text);
   }
 
-  void _handleSubmitted() {
-    bool check = true;
-
-    FocusScope.of(context).requestFocus(new FocusNode());
-    _checkInput();
-    if (_phoneController.text == '' || _passwordController.text == '') {
-      // showMessage(context, "登录信息填写不完整！");
-      print("登录信息填写不完整");
-      check = false;
-    } else if (!_correctPhone || !_correctPassword) {
-      //showMessage(context, "登录信息的格式不正确！");
-      check = false;
-      print("登录信息的格式不正确");
-    }
-
-    HttpUtil.login(_passwordController.text,_passwordController.text);
-
-    if (_correctPhone && _correctPassword && check) {
-      navigateToMovieDetailPage();
-    }
-  }
-
-  navigateToMovieDetailPage() {
+  navigateToWeListPage() {
+    putSpInfo();
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (BuildContext context) {
       return new WeListPage();
@@ -170,7 +246,7 @@ class _LoginState extends State<LoginPage> {
 
   void _openSignUp() {
     setState(() {
-      Navigator.of(context).push(new MaterialPageRoute<List<String>>(
+      Navigator.of(context).push(new MaterialPageRoute(
         builder: (BuildContext context) {
           return new SignUpPage();
         },
@@ -178,10 +254,7 @@ class _LoginState extends State<LoginPage> {
         if (onValue != null) {
           _phoneController.text = onValue[0];
           _passwordController.text = onValue[1];
-          FocusScope.of(context).requestFocus(new FocusNode());
-          _scaffoldKey.currentState.showSnackBar(new SnackBar(
-            content: new Text("注册成功！"),
-          ));
+          _userid = onValue[2];
         }
       });
     });

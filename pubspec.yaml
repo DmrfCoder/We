@@ -24,6 +24,9 @@ dependencies:
 
   dio: ^1.0.6
 
+  fluttertoast: ^2.0.9
+
+  shared_preferences: ^0.4.3
 
 
 

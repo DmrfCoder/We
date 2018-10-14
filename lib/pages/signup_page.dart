@@ -1,5 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_we/beans/responseinfo_bean.dart';
+import 'package:flutter_we/utils/http_util.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -9,49 +14,90 @@ class SignUpPage extends StatefulWidget {
 class _SignUpState extends State<SignUpPage> {
   final TextEditingController _usernameController = new TextEditingController();
   final TextEditingController _passwordController = new TextEditingController();
-  final TextEditingController _emailController = new TextEditingController();
   final TextEditingController _phoneController = new TextEditingController();
 
-  //final reference = FirebaseDatabase.instance.reference().child('users');
   bool _correctPhone = true;
-  bool _correctUsername = true;
-  bool _correctPassword = true;
 
-  void _handleSubmitted() {
-    FocusScope.of(context).requestFocus(new FocusNode());
+  bool showProgress = false;
+
+  Future _handleSubmitted() async {
     _checkInput();
-    if (_usernameController.text == '' || _passwordController.text == '') {
-      // showMessage(context, "注册信息填写不完整！");
-      print("注册信息填写不完整");
+
+    if (_usernameController.text == '' ||
+        _passwordController.text == '' ||
+        _passwordController.text == '') {
+      Fluttertoast.showToast(
+          msg: "注册信息填写不完整！",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          bgcolor: "#e74c3c",
+          textcolor: '#ffffff');
+
       return;
-    } else if (!_correctUsername || !_correctPassword || !_correctPhone) {
-      //showMessage(context, "注册信息的格式不正确！");
-      print("注册信息的格式不正确");
-      return;
+    }
+
+    showProgress = true;
+    ResponseInfoBean value = await HttpUtil.signup(
+        phonenumber: _phoneController.text,
+        password: _passwordController.text,
+        nickname: _usernameController.text);
+
+    if (value.result) {
+      setState(() {
+        showProgress = false;
+      });
+
+      Fluttertoast.showToast(
+          msg: "注册成功！",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          bgcolor: "#e74c3c",
+          textcolor: '#ffffff');
+
+      List<String> onBackInfo = [
+        _phoneController.text,
+        _passwordController.text,
+        value.userid
+      ];
+
+      Navigator.of(context).pop(onBackInfo);
+    } else {
+      setState(() {
+        showProgress = false;
+      });
+
+      Fluttertoast.showToast(
+          msg: value.desc,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          bgcolor: "#e74c3c",
+          textcolor: '#ffffff');
     }
   }
 
   void _checkInput() {
     if (_phoneController.text.isNotEmpty &&
-        (_phoneController.text.trim().length < 7 ||
-            _phoneController.text.trim().length > 12)) {
+        (_phoneController.text.trim().length != 11)) {
       _correctPhone = false;
     } else {
       _correctPhone = true;
     }
-    if (_usernameController.text.isNotEmpty &&
-        _usernameController.text.trim().length < 2) {
-      _correctUsername = false;
-    } else {
-      _correctUsername = true;
-    }
-    if (_passwordController.text.isNotEmpty &&
-        _passwordController.text.trim().length < 6) {
-      _correctPassword = false;
-    } else {
-      _correctPassword = true;
-    }
+
     setState(() {});
+  }
+
+  _buildProgress() {
+    if (showProgress) {
+      return new Center(
+          child: new CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation(Colors.pink),
+      ));
+    } else {
+      return Center();
+    }
   }
 
   @override
@@ -66,47 +112,52 @@ class _SignUpState extends State<SignUpPage> {
           child: new Container(
             decoration: new BoxDecoration(
                 image: new DecorationImage(
-              //image: new NetworkImage('http://wx4.sinaimg.cn/mw690/74f1d0degy1fvqsvynnv4j20lc0u07gw.jpg'),
               image: new AssetImage("images/login_signup_background.jpg"),
-
               fit: BoxFit.cover,
-              //centerSlice: new Rect.fromLTRB(270.0, 180.0, 1360.0, 730.0),
             )),
           )),
       new Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            new BackButton(),
-            new Text(
-              "  注册账户",
-              textScaleFactor: 2.0,
+            new Container(
+              child: new BackButton(),
+              alignment: Alignment.centerLeft,
             ),
             new Container(
-                width: MediaQuery.of(context).size.width * 0.96,
+              child: new Text(
+                "  注册账户",
+                textScaleFactor: 2.0,
+              ),
+              alignment: Alignment.centerLeft,
+            ),
+            new Container(
+                width: MediaQuery.of(context).size.width * 0.8,
                 child: new Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      new TextField(
-                        controller: _phoneController,
-                        keyboardType: TextInputType.phone,
-                        decoration: new InputDecoration(
-                          hintText: '手机号码',
-                          errorText: _correctPhone ? null : '号码的长度应该在7到12位之间',
-                          icon: new Icon(
-                            Icons.phone,
-                            color: Theme.of(context).iconTheme.color,
+                      new Container(
+                        padding: const EdgeInsets.only(top: 32.0),
+                        child: new TextField(
+                          controller: _phoneController,
+                          keyboardType: TextInputType.phone,
+                          decoration: new InputDecoration(
+                            hintText: '手机号码',
+                            errorText: _correctPhone ? null : '号码的长度应该在7到12位之间',
+                            icon: new Icon(
+                              Icons.phone,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
                           ),
+                          onSubmitted: (value) {
+                            _checkInput();
+                          },
                         ),
-                        onSubmitted: (value) {
-                          _checkInput();
-                        },
                       ),
                       new TextField(
                         controller: _usernameController,
                         decoration: new InputDecoration(
                           hintText: '用户名称',
-                          errorText: _correctUsername ? null : '名称的长度应该大于2位',
                           icon: new Icon(
                             Icons.account_circle,
                             color: Theme.of(context).iconTheme.color,
@@ -119,10 +170,9 @@ class _SignUpState extends State<SignUpPage> {
                       new TextField(
                         controller: _passwordController,
                         obscureText: true,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                         decoration: new InputDecoration(
                           hintText: '密码',
-                          errorText: _correctPassword ? null : '密码的长度需大于6位',
                           icon: new Icon(
                             Icons.lock_outline,
                             color: Theme.of(context).iconTheme.color,
@@ -165,7 +215,8 @@ class _SignUpState extends State<SignUpPage> {
                 Navigator.of(context).pop();
               },
             ))
-          ])
+          ]),
+      _buildProgress(),
     ]));
   }
 }

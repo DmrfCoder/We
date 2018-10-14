@@ -2,6 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_we/beans/responseinfo_bean.dart';
 
 class HttpUtil {
   static _post(String url, var content) async {
@@ -13,7 +17,6 @@ class HttpUtil {
     Response r;
     try {
       r = await dio.post(url, data: content);
-      print(r);
     } on DioError catch (e) {
       print(e);
       print(e.response.statusCode);
@@ -22,23 +25,38 @@ class HttpUtil {
     return r;
   }
 
-  static signup(String phonenumber, String password, String nickname) {
-    String usrl = "http://javacloud.bmob.cn/bb2c29a77a076bc9/signUp";
+  //注册
+  static signup({String phonenumber, String password, String nickname}) async {
+    String usrl = "http://javacloud.bmob.cn/ff9f06fde1813232/signUp";
 
-    var c = {"username": phonenumber, "password": password};
+    var c = {
+      "username": nickname,
+      "phonenumber": phonenumber,
+      "password": password
+    };
 
-    var response = _post(usrl, c);
+    Response response = await _post(usrl, c);
+    ResponseInfoBean responseInfoBean;
 
-    print(response);
+    responseInfoBean = new ResponseInfoBean(
+        result: response.data["result"],
+        userid: response.data["userid"],
+        desc: response.data["desc"]);
+
+    return responseInfoBean;
   }
 
-  static login(String phonenumber, String password) {
-    String usrl = "http://javacloud.bmob.cn/bb2c29a77a076bc9/logIn";
+  static login({String phonenumber, String password}) async {
+    String usrl = "http://javacloud.bmob.cn/ff9f06fde1813232/logIn";
 
-    var c = {"username": phonenumber, "password": password};
+    var c = {"phonenumber": phonenumber, "password": password};
+    Response response = await _post(usrl, c);
+    ResponseInfoBean responseInfoBean;
+    responseInfoBean = new ResponseInfoBean(
+        result: response.data["result"],
+        desc: response.data["desc"],
+        userid: response.data["userid"]);
 
-    var response = _post(usrl, c);
-
-    print(response);
+    return responseInfoBean;
   }
 }
