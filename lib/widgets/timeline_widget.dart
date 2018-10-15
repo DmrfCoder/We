@@ -15,12 +15,12 @@ limitations under the License. */
 library timeline;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_we/beans/constant_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/callback/listview_item_click_callback.dart';
-import 'package:flutter_we/item/timeline_item.dart';
+import 'package:flutter_we/widgets/timemodelrows_widget.dart';
 
 class TimelineComponent extends StatefulWidget {
-
   final List<TimelineModel> timelineList;
 
   final Color lineColor;
@@ -33,61 +33,85 @@ class TimelineComponent extends StatefulWidget {
 
   final ListviewItemClickCallBack listviewItemClickCallBack;
 
-  const TimelineComponent({Key key, this.timelineList, this.lineColor, this.backgroundColor, this.headingColor, this.descriptionColor,this.listviewItemClickCallBack}) : super(key: key);
+  const TimelineComponent(
+      {Key key,
+      this.timelineList,
+      this.lineColor,
+      this.backgroundColor,
+      this.headingColor,
+      this.descriptionColor,
+      this.listviewItemClickCallBack})
+      : super(key: key);
 
   @override
   TimelineComponentState createState() {
     return new TimelineComponentState();
   }
-
 }
 
-class TimelineComponentState extends State<TimelineComponent> with SingleTickerProviderStateMixin{
-
+class TimelineComponentState extends State<TimelineComponent>
+    with SingleTickerProviderStateMixin {
   Animation<double> animation;
   AnimationController controller;
   double fraction = 0.0;
- 
+
+
   @override
   void initState() {
     super.initState();
+
     controller = AnimationController(
-        duration: const Duration(milliseconds: 1000), 
-        vsync: this);
+        duration: const Duration(milliseconds: 1000), vsync: this);
     controller.forward();
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> child = [];
 
+    int size = widget.timelineList.length;
 
+    if (size == 1) {
+      TimeModelRow timeModelRow = new TimeModelRow(
+        model: widget.timelineList[0],
+        listviewItemClickCallBack: widget.listviewItemClickCallBack,
+        locationType: LocationType.alone,
+      );
+      child.add(timeModelRow);
+    } else if (size > 1) {
+      TimeModelRow timeModelRow = new TimeModelRow(
+        model: widget.timelineList[0],
+        listviewItemClickCallBack: widget.listviewItemClickCallBack,
+        locationType: LocationType.top,
+      );
+      child.add(timeModelRow);
 
-    return new Container(
-              child: new ListView.builder(
-                itemCount: widget.timelineList.length,
+      TimeModelRow timeModelRow2 = new TimeModelRow(
+        model: widget.timelineList[size - 1],
+        listviewItemClickCallBack: widget.listviewItemClickCallBack,
+        locationType: LocationType.bottom,
+      );
 
-                itemBuilder: (_, index) {
-                  return new TimelineElement(
-                    lineColor: widget.lineColor==null?Theme.of(context).accentColor:widget.lineColor,
-                    //backgroundColor: widget.backgroundColor==null?Colors.white:widget.backgroundColor,
-                    backgroundColor: Colors.transparent,
-                    model: widget.timelineList[index],
-                    firstElement: index==0,
-                    lastElement: widget.timelineList.length==index+1,
-                    controller: controller,
-                    headingColor: widget.headingColor,
-                    descriptionColor: widget.descriptionColor,
-                    listviewItemClickCallBack: widget.listviewItemClickCallBack,
-                  );
-                },
-              ),
-            );
+      for (int i = 1; i < size - 2; i++) {
+        TimeModelRow timeModelRow3 = new TimeModelRow(
+          model: widget.timelineList[i],
+          listviewItemClickCallBack: widget.listviewItemClickCallBack,
+          locationType: LocationType.center,
+        );
+        child.add(timeModelRow3);
+      }
+      child.add(timeModelRow2);
+    }
+    return new Expanded(
+      child: new ListView(
+        children: child,
+      ),
+    );
   }
 
   @override
-    void dispose() {
-      controller.dispose();
-      super.dispose();
-    }
-
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }

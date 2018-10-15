@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_we/animation/floatingbutton_animation.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/beans/events_bean.dart';
 import 'package:flutter_we/controllor/we_controllor.dart';
@@ -56,13 +57,12 @@ class WeListPageState extends State<WeListPage> {
         child: new Column(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-                decoration: new BoxDecoration(
-                    image: new DecorationImage(
-                        image: new NetworkImage(
-                            "http://t2.hddhhn.com/uploads/tu/201612/98/st93.png")
-                    )),
-                accountName: new Text("demo"),
-                accountEmail: new Text("demo@gmail.com"),
+              decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                      image: new NetworkImage(
+                          "http://t2.hddhhn.com/uploads/tu/201612/98/st93.png"))),
+              accountName: new Text("demo"),
+              accountEmail: new Text("demo@gmail.com"),
             ),
             new Row(
               children: <Widget>[
@@ -99,32 +99,36 @@ class WeListPageState extends State<WeListPage> {
               fit: BoxFit.cover,
             )),
           ),
+          // _buildTimeline(),
           new Column(
             children: <Widget>[
-              new Center(
-                child: new Container(
-                  padding: const EdgeInsets.only(top: 32.0),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.9,
-                  child: new TimelineComponent(
-                    timelineList: weControllor.timeLineModels,
-                    listviewItemClickCallBack: weControllor,
-                    lineColor: Colors.black,
-                  ),
-                ),
+              new TimelineComponent(
+                timelineList: weControllor.timeLineModels,
+                listviewItemClickCallBack: weControllor,
+                lineColor: Colors.black,
               ),
               new Center(
                   child: new Container(
-                child: new FloatingActionButton(
-                  onPressed: () => startAddProjectPage(null),
-                  tooltip: 'Increment',
-                  child: new Icon(Icons.add),
-                  backgroundColor: Colors.black,
+                padding: EdgeInsets.only(bottom: 40.0),
+                child: new AnimatedFab(
+                  onClick: () => startAddProjectPage(null),
                 ),
               ))
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTimeline() {
+    return new Positioned(
+      top: 0.0,
+      bottom: 0.0,
+      left: MediaQuery.of(context).size.width / 2,
+      child: new Container(
+        width: 2.0,
+        color: Colors.red[300],
       ),
     );
   }

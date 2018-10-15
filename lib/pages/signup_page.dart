@@ -43,6 +43,21 @@ class _SignUpState extends State<SignUpPage> {
         password: _passwordController.text,
         nickname: _usernameController.text);
 
+    if (value == null) {
+      setState(() {
+        showProgress = false;
+      });
+
+      Fluttertoast.showToast(
+          msg: "注册失败，请检查您的网络！",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          bgcolor: "#e74c3c",
+          textcolor: '#ffffff');
+      return;
+    }
+
     if (value.result) {
       setState(() {
         showProgress = false;
@@ -120,8 +135,6 @@ class _SignUpState extends State<SignUpPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-
-
             new Container(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: new Column(
@@ -145,43 +158,42 @@ class _SignUpState extends State<SignUpPage> {
                             _checkInput();
                           },
                         ),
-                                        ),
-
-                      new Container(
-                      padding: const EdgeInsets.only(top: 32.0),
-                      child:new TextField(
-                        controller: _usernameController,
-                        cursorColor: Colors.black,
-                        decoration: new InputDecoration(
-                          hintText: '用户名称',
-                          icon: new Icon(
-                            Icons.account_circle,
-                            color: Colors.white,
-                          ),
-                        ),
-                        onSubmitted: (value) {
-                          _checkInput();
-                        },
-                      ),
                       ),
                       new Container(
-                      padding: const EdgeInsets.only(top: 32.0),
-                      child:new TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        keyboardType: TextInputType.text,
-                        cursorColor: Colors.black,
-                        decoration: new InputDecoration(
-                          hintText: '密码',
-                          icon: new Icon(
-                            Icons.lock_outline,
-                            color: Colors.white,
+                        padding: const EdgeInsets.only(top: 32.0),
+                        child: new TextField(
+                          controller: _usernameController,
+                          cursorColor: Colors.black,
+                          decoration: new InputDecoration(
+                            hintText: '用户名称',
+                            icon: new Icon(
+                              Icons.account_circle,
+                              color: Colors.white,
+                            ),
                           ),
+                          onSubmitted: (value) {
+                            _checkInput();
+                          },
                         ),
-                        onSubmitted: (value) {
-                          _checkInput();
-                        },
                       ),
+                      new Container(
+                        padding: const EdgeInsets.only(top: 32.0),
+                        child: new TextField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          keyboardType: TextInputType.text,
+                          cursorColor: Colors.black,
+                          decoration: new InputDecoration(
+                            hintText: '密码',
+                            icon: new Icon(
+                              Icons.lock_outline,
+                              color: Colors.white,
+                            ),
+                          ),
+                          onSubmitted: (value) {
+                            _checkInput();
+                          },
+                        ),
                       )
                     ])),
             new Center(
@@ -211,7 +223,8 @@ class _SignUpState extends State<SignUpPage> {
             ),
             new Center(
                 child: new FlatButton(
-              child: new Text("已经有账户了？ 登录",style: new TextStyle(color: Colors.black38)),
+              child: new Text("已经有账户了？ 登录",
+                  style: new TextStyle(color: Colors.black38)),
               onPressed: () {
                 Navigator.of(context).pop();
               },

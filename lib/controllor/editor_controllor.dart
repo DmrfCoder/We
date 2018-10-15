@@ -85,7 +85,7 @@ class EditorControllor {
 
   updateEditbean(EditBean editbean) {
     int index = editbean.index;
-    if (index < 0 || index > _editbeanList.list.length) {
+    if (index < 0 || index >= _editbeanList.list.length) {
       return false;
     } else {
       _editbeanList.list[index] = editbean;
@@ -94,10 +94,7 @@ class EditorControllor {
   }
 
   addPicture(String strImage) {
-    if (_editbeanList.addEditBean(strImage, _curIndex + 1, false)) {
-      _curIndex++;
-      _editbeanList.addEditBean("", _curIndex, true);
-    }
+    _curIndex = _editbeanList.addEditBean(strImage, _curIndex, false);
   }
 
   dispose() {

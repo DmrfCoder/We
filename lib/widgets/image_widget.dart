@@ -25,13 +25,16 @@ class ImageWidget extends StatefulWidget {
 }
 
 class ImageWidgetState extends State<ImageWidget> {
-  File file;
+
+
+  var imageByte;
 
   Future initFile() async {
     print("initFile");
-//    file = await FileIo.getTempFile();
-//    file.writeAsStringSync(widget.editBean.content, encoding: latin1);
+    imageByte=base64Decode(widget.editBean.content);
   }
+
+
 
   @override
   void initState() {
@@ -52,7 +55,7 @@ class ImageWidgetState extends State<ImageWidget> {
         ),
         Expanded(
           child: new GestureDetector(
-            child: new Image.file(file),
+            child: new Image.memory(imageByte),
             onTap: clickImage,
           ),
           flex: 8,

@@ -37,8 +37,9 @@ class WeControllor
 
   init() async {
     bool hasDownLoadData = false;
+    bool needdownLoadData = false;
 
-    if (userid.isNotEmpty) {
+    if (userid.isNotEmpty && needdownLoadData) {
       DataResponseInfoBean dataResponseInfoBean =
           await HttpUtil.downloadData(userid);
 
@@ -58,6 +59,7 @@ class WeControllor
         });
 
         hasDownLoadData = true;
+        weListPageState.updateState(this);
       }
     }
 
@@ -74,6 +76,8 @@ class WeControllor
             var timelineModel =
                 new TimeLineModelList.fromJson(timelineModelMap);
             timeLineModels = timelineModel.list;
+
+            print("get data from io:"+timelineModel.list.length.toString());
 
             weListPageState.updateState(this);
           } catch (e) {
@@ -122,12 +126,17 @@ class WeControllor
     });
   }
 
-  deleteItem(String id) {
+  deleteItem(String id) async {
     timeLineModels.removeWhere((timelinemodel) {
       timelinemodel.id == id;
     });
     weListPageState.updateState(this);
     dispose();
+    DataResponseInfoBean dataResponseInfoBean = await HttpUtil.deleteData(id);
+
+    if (dataResponseInfoBean.result == null) {
+      return;
+    }
   }
 
   @override
@@ -145,16 +154,20 @@ class WeControllor
 
     weListPageState.updateState(this);
 
+    dispose();
+
     DataResponseInfoBean dataResponseInfoBean =
         await HttpUtil.uploadData(timelineModel: timelineModel, userId: userid);
 
-    if (dataResponseInfoBean.result) {
+    if (dataResponseInfoBean.result != null && dataResponseInfoBean.result) {
       timelineModel.id = dataResponseInfoBean.objectId;
+      print("update data success");
     } else {
       timelineModel.id = timeLineModels.length.toString();
+      print("update data faild");
     }
 
-    dispose();
+
   }
 
   @override
@@ -180,10 +193,12 @@ class WeControllor
 
     weListPageState.updateState(this);
 
-    DataResponseInfoBean dataResponseInfoBean= await HttpUtil.updateData(timelineModel);
-    if(dataResponseInfoBean.result){
+    DataResponseInfoBean dataResponseInfoBean =
+        await HttpUtil.updateData(timelineModel);
+
+    if (dataResponseInfoBean.result != null && dataResponseInfoBean.result) {
       print("update data success");
-    }else{
+    } else {
       print("update data faild");
     }
 

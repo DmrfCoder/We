@@ -60,12 +60,13 @@ flutter:
 
 
   assets:
-  - images/mainbackground.png
   - images/edit_back.png
   - images/we_icon.png
-  - images/hert.png
   - images/login_signup_background.jpg
-  - images/line.png
+  - images/heart_center.png
+  - images/heart_top.png
+  - images/heart_bottom.png
+  - images/heart_alone.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

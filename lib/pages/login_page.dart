@@ -48,35 +48,26 @@ class _LoginState extends State<LoginPage> {
     setState(() {});
   }
 
-  Future _handleSubmitted() async {
-    bool check = true;
-
-    FocusScope.of(context).requestFocus(new FocusNode());
-    _checkInput();
-    if (_phoneController.text == '' || _passwordController.text == '') {
-      Fluttertoast.showToast(
-          msg: "登录信息填写不完整",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          bgcolor: "#e74c3c",
-          textcolor: '#ffffff');
-      check = false;
-    } else if (!_correctPhone || !_correctPassword) {
-      Fluttertoast.showToast(
-          msg: "登录信息的格式不正确",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          bgcolor: "#e74c3c",
-          textcolor: '#ffffff');
-      check = false;
-    }
-
+  _login() async {
     showProgress = true;
     UserResponseInfoBean value = await HttpUtil.login(
         phonenumber: _phoneController.text, password: _passwordController.text);
 
+    if (value == null) {
+      setState(() {
+        showProgress = false;
+      });
+
+      Fluttertoast.showToast(
+          msg: "登陆失败，请检查您的网络!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          bgcolor: "#e74c3c",
+          textcolor: '#ffffff');
+
+      return;
+    }
     if (value.result) {
       setState(() {
         showProgress = false;
@@ -106,6 +97,36 @@ class _LoginState extends State<LoginPage> {
     }
   }
 
+  Future _handleSubmitted() async {
+    bool check = true;
+
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _checkInput();
+    if (_phoneController.text == '' || _passwordController.text == '') {
+      Fluttertoast.showToast(
+          msg: "登录信息填写不完整",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          bgcolor: "#e74c3c",
+          textcolor: '#ffffff');
+      check = false;
+      return;
+    } else if (!_correctPhone || !_correctPassword) {
+      Fluttertoast.showToast(
+          msg: "登录信息的格式不正确",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          bgcolor: "#e74c3c",
+          textcolor: '#ffffff');
+      check = false;
+      return;
+    }
+
+    _login();
+  }
+
   _buildProgress() {
     if (showProgress) {
       return new Center(
@@ -122,6 +143,11 @@ class _LoginState extends State<LoginPage> {
         await SharePreferenceUtil.getInstance();
     _phoneController.text = sharePreferenceUtil.getString(PHONE_KEY);
     _passwordController.text = sharePreferenceUtil.getString(PASSWORD_kEY);
+
+    if (_passwordController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty) {
+      _login();
+    }
   }
 
   @override

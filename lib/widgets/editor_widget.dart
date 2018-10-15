@@ -31,6 +31,8 @@ class _EditorState extends State<Editor> implements EditorCallBack {
   Widget build(BuildContext context) {
     var children = <Widget>[];
 
+
+
     for (EditBean editbean in widget.list) {
       if (editbean.isText) {
 
@@ -40,6 +42,7 @@ class _EditorState extends State<Editor> implements EditorCallBack {
           editorCallBack: this,
         ));
       } else {
+
         var image = new ImageWidget(
           editBean: editbean,
           editorCallBack: this,

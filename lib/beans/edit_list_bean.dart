@@ -14,14 +14,41 @@ class EditbeanList {
   }
 
   addEditBean(var source, int curIndex, bool istext) {
-    EditBean editBean = new EditBean(curIndex, istext, source);
 
-    if (curIndex == list.length) {
+    if(curIndex==list.length){
+      EditBean editBean2 = new EditBean(curIndex, true, "");
+      list.add(editBean2);
+      return curIndex;
+    }
+
+    int insertIndex = curIndex + 1;
+
+    EditBean editBean = new EditBean(insertIndex, istext, source);
+
+
+
+
+    if (insertIndex == list.length) {
       list.add(editBean);
-      return true;
+      EditBean editBean2 = new EditBean(insertIndex + 1, true, "");
+      list.add(editBean2);
+
+      return insertIndex + 1;
+    } else if (list[insertIndex].isText) {
+      _insertImageToList(insertIndex, editBean);
+      return insertIndex + 1;
     } else {
-      _insertImageToList(curIndex, editBean);
-      return false;
+      _insertImageToList(insertIndex, editBean);
+
+      for (int start = insertIndex; start < list.length; start++) {
+        if (list[start].isText) {
+          return start;
+        }
+      }
+
+      EditBean editBean3 = new EditBean(insertIndex + 1, true, "");
+      list.add(editBean3);
+      return list.length - 1;
     }
   }
 

@@ -49,7 +49,7 @@ class _TextWidgetState extends State<TextWidget> {
 
   Future<Null> _focusNodelistener() async {
     if (_focusNode.hasFocus) {
-    //  widget.editorCallBack.updateCurIndex(CurEditBean: widget.editBean);
+      widget.editorCallBack.updateCurIndex(CurEditBean: widget.editBean);
     } else {
 //      if (_contentController.text.isEmpty) {
 //        widget.editorCallBack.updateEditBeanData(
@@ -81,7 +81,7 @@ class _TextWidgetState extends State<TextWidget> {
             ),
             maxLines: null,
             style: new TextStyle(
-              fontSize: 30.0,
+              fontSize: 20.0,
               color: Colors.black87,
             ),
             onChanged: _textChanged,

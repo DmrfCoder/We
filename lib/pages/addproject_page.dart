@@ -33,13 +33,15 @@ class AddprojectState extends State<AddProjectPage>
       var imageFile = await _imagePicker.pickImage(imageSource: captureMode);
       setState(() {
         _imageFile = imageFile;
-        String path = _imageFile.path;
-        print(path);
-        String filename = path.substring(path.lastIndexOf('/'));
-        print(filename);
+
+        List<int> imageBytes=_imageFile.readAsBytesSync();
+
+        String imageData=base64Encode(imageBytes);
+
+
 
         _editorControllor
-            .addPicture(_imageFile.readAsStringSync(encoding: latin1));
+            .addPicture(imageData);
       });
     } catch (e) {
       print(e);
@@ -116,7 +118,7 @@ class AddprojectState extends State<AddProjectPage>
           icon: Icon(Icons.picture_in_picture),
           onPressed: () {
             //做选择图片的操作
-            // captureImage(ImageSource.photos);
+            captureImage(ImageSource.photos);
           }),
     );
 
