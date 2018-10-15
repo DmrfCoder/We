@@ -67,6 +67,7 @@ flutter:
   - images/heart_top.png
   - images/heart_bottom.png
   - images/heart_alone.png
+  - images/black_heart_alone.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

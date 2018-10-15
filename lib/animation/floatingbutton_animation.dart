@@ -36,41 +36,54 @@ class _AnimatedFabState extends State<AnimatedFab>
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> child = [];
+
     return new SizedBox(
       width: expandedSize,
       height: expandedSize,
       child: new AnimatedBuilder(
         animation: _animationController,
         builder: (BuildContext context, Widget child) {
-          return new Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              _buildExpandedBackground(),
-              _buildOption(
-                  new Container(
-                    width: 40.0,
-                    decoration: new BoxDecoration(
-                      image: new DecorationImage(
-                        image: new ExactAssetImage('images/heart_alone.png'),
-                        fit: BoxFit.fitHeight,
+          if (_animationController.value > 0.5) {
+            return new Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                _buildExpandedBackground(),
+                _buildOption(
+                    new Container(
+                      width: 40.0,
+                      decoration: new BoxDecoration(
+                        image: new DecorationImage(
+                          image: new ExactAssetImage(
+                              'images/black_heart_alone.png'),
+                          fit: BoxFit.fitHeight,
+                        ),
                       ),
                     ),
-                  ),
-                  -math.pi / 5),
-              _buildOption(
-                  new Container(
-                    width: 40.0,
-                    decoration: new BoxDecoration(
-                      image: new DecorationImage(
-                        image: new ExactAssetImage('images/heart_alone.png'),
-                        fit: BoxFit.fitHeight,
+                    -math.pi / 5),
+                _buildOption(
+                    new Container(
+                      width: 40.0,
+                      decoration: new BoxDecoration(
+                        image: new DecorationImage(
+                          image: new ExactAssetImage('images/heart_alone.png'),
+                          fit: BoxFit.fitHeight,
+                        ),
                       ),
                     ),
-                  ),
-                  math.pi / 5),
-              _buildFabCore(),
-            ],
-          );
+                    math.pi / 5),
+                _buildFabCore(),
+              ],
+            );
+          } else {
+            return new Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                _buildExpandedBackground(),
+                _buildFabCore(),
+              ],
+            );
+          }
         },
       ),
     );
