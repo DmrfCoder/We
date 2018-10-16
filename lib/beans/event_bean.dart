@@ -25,6 +25,11 @@ class TimelineModel {
       this.editbeanList = new EditbeanList();
     }
 
+    if (messageType is MessageType) {
+      this.messageType = messageType;
+      return;
+    }
+
     switch (messageType) {
       case 0:
         this.messageType = MessageType.nice;

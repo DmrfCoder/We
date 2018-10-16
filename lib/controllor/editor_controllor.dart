@@ -24,7 +24,7 @@ class EditorControllor {
 
   EditType get editType => _editType;
 
-  getDataList(){
+  getDataList() {
     return _timelineModel.editbeanList.list;
   }
 
@@ -40,7 +40,7 @@ class EditorControllor {
     if (_editType == EditType.add) {
       EditBean editBean = new EditBean(_curIndex, true, "");
       _timelineModel.editbeanList.list.add(editBean);
-      _timeLineModelEditCallBack.updateTimelineModel(_timelineModel);
+      //_timeLineModelEditCallBack.updateTimelineModel(_timelineModel);
     }
   }
 
@@ -124,7 +124,7 @@ class EditorControllor {
       _timelineModel.time = time;
 
       _timeLineModelEditCallBack.addTimelineModel(_timelineModel);
-    } else {
+    } else if (_editType == EditType.edit) {
       if (emptyFlag) {
         _timeLineModelEditCallBack.deleteTimelineModel(_timelineModel);
       } else {

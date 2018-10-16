@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_we/beans/user_responseinfo_bean.dart';
 import 'package:flutter_we/pages/signup_page.dart';
 import 'package:flutter_we/pages/we_page.dart';
 import 'package:flutter_we/utils/http_util.dart';
@@ -50,16 +49,16 @@ class _LoginState extends State<LoginPage> {
 
   _login() async {
     showProgress = true;
-    UserResponseInfoBean value = await HttpUtil.login(
+    var value = await HttpUtil.login(
         phonenumber: _phoneController.text, password: _passwordController.text);
 
-    if (value == null) {
+    if (!value["result"]) {
       setState(() {
         showProgress = false;
       });
 
       Fluttertoast.showToast(
-          msg: "登陆失败，请检查您的网络!",
+          msg: value["error"] == null ? "登陆失败，请检查您的网络!" : value["error"],
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 1,
@@ -67,8 +66,7 @@ class _LoginState extends State<LoginPage> {
           textcolor: '#ffffff');
 
       return;
-    }
-    if (value.result) {
+    } else {
       setState(() {
         showProgress = false;
       });
@@ -81,19 +79,7 @@ class _LoginState extends State<LoginPage> {
           bgcolor: "#e74c3c",
           textcolor: '#ffffff');
 
-      navigateToWeListPage(value.userid);
-    } else {
-      setState(() {
-        showProgress = false;
-      });
-
-      Fluttertoast.showToast(
-          msg: value.desc,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          bgcolor: "#e74c3c",
-          textcolor: '#ffffff');
+      navigateToWeListPage(value["user_id"]);
     }
   }
 

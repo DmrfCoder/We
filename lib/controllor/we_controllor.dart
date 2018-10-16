@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_we/beans/constant_bean.dart';
-import 'package:flutter_we/beans/data_responseinfo_bean.dart';
 import 'package:flutter_we/beans/edit_list_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/beans/events_bean.dart';
@@ -42,27 +41,10 @@ class WeControllor
     bool needdownLoadData = false;
 
     if (userid.isNotEmpty && needdownLoadData) {
-      DataResponseInfoBean dataResponseInfoBean =
-      await HttpUtil.downloadData(userid);
+      var value = await HttpUtil.downloadData(userid);
 
-      if (dataResponseInfoBean.result) {
-        Map map = dataResponseInfoBean.datdaContent;
-
-        map.forEach((key, value) {
-          Map timelineModelMap = json.decode(value["content"]);
-
-          EditbeanList editbeanList =
-          new EditbeanList.fromJson(timelineModelMap);
-
-          TimelineModel timelineModel = new TimelineModel(
-              time: value["createdTime"],
-              editbeanList: editbeanList,
-              id: key,
-              messageType: value["messageType"]);
-
-          timeLineModels.add(timelineModel);
-        });
-
+      if (value["result"]) {
+        timeLineModels = value["timelineModelList"];
         hasDownLoadData = true;
         weListPageState.updateState(this);
       }
@@ -79,7 +61,7 @@ class WeControllor
           try {
             Map timelineModelMap = json.decode(jsoncontentfuture);
             var timelineModel =
-            new TimeLineModelList.fromJson(timelineModelMap);
+                new TimeLineModelList.fromJson(timelineModelMap);
             timeLineModels = timelineModel.list;
 
             print("get data from io:" + timelineModel.list.length.toString());
@@ -137,10 +119,12 @@ class WeControllor
     });
     weListPageState.updateState(this);
     dispose();
-    DataResponseInfoBean dataResponseInfoBean = await HttpUtil.deleteData(id);
+    var value = await HttpUtil.deleteData(id);
 
-    if (dataResponseInfoBean.result == null) {
-      return;
+    if (value["result"]) {
+      print("删除云端数据成功");
+    } else {
+      print("删除云端数据失败");
     }
   }
 
@@ -161,15 +145,14 @@ class WeControllor
 
     dispose();
 
-    DataResponseInfoBean dataResponseInfoBean =
-    await HttpUtil.uploadData(timelineModel: timelineModel, userId: userid);
+    var value =
+        await HttpUtil.uploadData(timelineModel: timelineModel, userId: userid);
 
-    if (dataResponseInfoBean.result != null && dataResponseInfoBean.result) {
-      timelineModel.id = dataResponseInfoBean.objectId;
-      print("update data success");
+    if (value["result"]) {
+      timelineModel.id = value["object_id"];
+      print("upload data success");
     } else {
-      timelineModel.id = timeLineModels.length.toString();
-      print("update data faild");
+      print("upload data faild");
     }
   }
 
@@ -196,10 +179,9 @@ class WeControllor
 
     weListPageState.updateState(this);
 
-    DataResponseInfoBean dataResponseInfoBean =
-    await HttpUtil.updateData(timelineModel);
+    var value = await HttpUtil.updateData(timelineModel);
 
-    if (dataResponseInfoBean.result != null && dataResponseInfoBean.result) {
+    if (value["result"]) {
       print("update data success");
     } else {
       print("update data faild");
@@ -207,6 +189,4 @@ class WeControllor
 
     dispose();
   }
-
-
 }

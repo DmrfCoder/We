@@ -6,171 +6,350 @@ import 'package:dio/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_we/beans/data_responseinfo_bean.dart';
+import 'package:flutter_we/beans/edit_bean.dart';
+import 'package:flutter_we/beans/edit_list_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
-import 'package:flutter_we/beans/user_responseinfo_bean.dart';
 
 class HttpUtil {
-  static post(String url, var content) async {
+  //注册
+  static signup({String phonenumber, String password}) async {
+    String url = "https://api2.bmob.cn/1/users";
+    var content = {"password": password, "username": phonenumber};
+
+    var dio = new Dio();
+
+    Response response;
+
+    dio.options.contentType = ContentType.json;
+    dio.options.headers["X-Bmob-Application-Id"] =
+        "2b3b0a7931e05ebe9c91ea8163d06bdf";
+    dio.options.headers["X-Bmob-REST-API-Key"] =
+        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["Content-Type"] = "application/json";
+
+    try {
+      response = await dio.post(url, data: content);
+
+      if (response.statusCode == 201) {
+        String user_id = response.data["objectId"];
+
+        print("user_id:" + user_id);
+
+        return {"result": true, "user_id": user_id};
+      }
+    } on DioError catch (e) {
+      return {"result": false, "error": e.response.data["error"]};
+    }
+    return {"result": false};
+  }
+
+  static login({String phonenumber, String password}) async {
+    String url = "https://api2.bmob.cn/1/login";
+    var content = {"username": phonenumber, "password": password};
+
+    var dio = new Dio();
+
+    Response response;
+
+    dio.options.headers["X-Bmob-Application-Id"] =
+        "2b3b0a7931e05ebe9c91ea8163d06bdf";
+    dio.options.headers["X-Bmob-REST-API-Key"] =
+        "9b8adb6074b122558d490c9807a6d903";
+
+    try {
+      response = await dio.get(url, data: content);
+      if (response.statusCode == 200) {
+        String user_id = response.data["objectId"];
+
+        return {"result": true, "user_id": user_id};
+      }
+    } on DioError catch (e) {
+      return {"result": false, "error": e.response.data["error"]};
+    }
+    return {"result": false};
+  }
+
+  static _uploadfile(String filename, String data) async {
+    String url = "https://api2.bmob.cn/2/files/" + filename;
+
+    var dio = new Dio();
+
+    Response response;
+
+    dio.options.contentType = ContentType.text;
+    dio.options.headers["X-Bmob-Application-Id"] =
+        "2b3b0a7931e05ebe9c91ea8163d06bdf";
+    dio.options.headers["X-Bmob-REST-API-Key"] =
+        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["Content-Type"] = "text/plain";
+
+    try {
+      response = await dio.post(url, data: data);
+
+      if (response.statusCode == 200) {
+        return {"result": true, "url": response.data["url"]};
+      }
+    } on DioError catch (e) {
+      return {"result": false, "error": response.data["error"]};
+    }
+  }
+
+  static uploadData({TimelineModel timelineModel, String userId}) async {
+    String url = "https://api2.bmob.cn/1/classes/MessageData";
+
+    Map<int, String> picMap = new Map();
+
+    List<EditBean> pictureIndex = [];
+
+    int size = timelineModel.editbeanList.list.length;
+
+    for (int index = 0; index < size; index++) {
+      EditBean e = timelineModel.editbeanList.list[index];
+
+      if (!e.isText) {
+        picMap[e.index] = e.content;
+        pictureIndex.add(e);
+      }
+    }
+
+    for (EditBean e in pictureIndex) {
+      timelineModel.editbeanList.list.remove(e);
+    }
+
+    var content = {
+      "userid": userId,
+      "messageType": timelineModel.messageType.index,
+      "isDeleted": false,
+      "content": json.encode(timelineModel.editbeanList),
+      "createdTime": timelineModel.time,
+    };
+
     var dio = new Dio();
     dio.interceptor.response.onError = (DioError error) {
       print("error：" + error.toString());
     };
 
-
-
-
-    Response r;
+    Response response;
 
     dio.options.contentType = ContentType.json;
-    dio.options.headers["X-Bmob-Application-Id"] = "2b3b0a7931e05ebe9c91ea8163d06bdf";
-    dio.options.headers["X-Bmob-REST-API-Key"] = "9b8adb6074b122558d490c9807a6d903";
+
+    dio.options.headers["X-Bmob-Application-Id"] =
+        "2b3b0a7931e05ebe9c91ea8163d06bdf";
+    dio.options.headers["X-Bmob-REST-API-Key"] =
+        "9b8adb6074b122558d490c9807a6d903";
     dio.options.headers["Content-Type"] = "application/json";
 
+    try {
+      response = await dio.post(url, data: content);
+
+      if (response.statusCode == 201) {
+        String object_id = response.data["objectId"];
+
+        if (picMap.length == 0) {
+          print("object_id:" + object_id);
+          return {"result": true, "object_id": object_id};
+        } else {
+          var upFileResponse =await _uploadfile(
+              userId + "_" + object_id + "picture.txt", picMap.toString());
+
+          String picFileUrl = "";
+          if (!upFileResponse["result"]) {
+            print(upFileResponse["error"]);
+          } else {
+            picFileUrl = upFileResponse["url"];
+            return _updatePictureUrl(object_id, picFileUrl);
+          }
+        }
+      }
+    } on DioError catch (e) {
+      print(e.response.data["error"]);
+    }
+
+    return {"result": false};
+  }
+
+  static _updatePictureUrl(String objectid, String url) async {
+    String url = "https://api2.bmob.cn/1/classes/MessageData/";
+
+    url = url + objectid;
+
+    var content = {
+      "url": url,
+    };
+
+    var dio = new Dio();
+    dio.interceptor.response.onError = (DioError error) {
+      print("error：" + error.toString());
+    };
+
+    Response response;
+
+    dio.options.contentType = ContentType.json;
+
+    dio.options.headers["X-Bmob-Application-Id"] =
+        "2b3b0a7931e05ebe9c91ea8163d06bdf";
+    dio.options.headers["X-Bmob-REST-API-Key"] =
+        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["Content-Type"] = "application/json";
 
     try {
-      r = await dio.post(url, data: content);
+      response = await dio.put(url, data: content);
+
+      if (response.statusCode == 200) {
+        print("update suucess");
+        return {"result": true};
+      } else {
+        print("update error");
+      }
     } on DioError catch (e) {
-      // return e;
-      print(e);
-      // print(e.response.statusCode);
+      print(e.response.data["error"]);
     }
 
-    return r;
-  }
-
-  //注册
-  static signup({String phonenumber, String password, String nickname}) async {
-    String url = "https://api2.bmob.cn/1/users";
-
-    var c = {
-      "username": nickname,
-      "mobilePhoneNumber": phonenumber,
-      "password": password
-    };
-
-    Response response = await post(url, c);
-
-    if (response == null) {
-      return new DataResponseInfoBean(result: false);
-    }
-    UserResponseInfoBean responseInfoBean;
-
-    responseInfoBean = new UserResponseInfoBean(
-        result: response.data["result"],
-        userid: response.data["userid"],
-        desc: response.data["desc"]);
-
-    return responseInfoBean;
-  }
-
-  static login({String phonenumber, String password}) async {
-    String url = "http://javacloud.bmob.cn/ff9f06fde1813232/logIn";
-
-    var c = {"phonenumber": phonenumber, "password": password};
-    Response response = await post(url, c);
-
-    if (response == null) {
-      return new DataResponseInfoBean(result: false);
-    }
-
-    UserResponseInfoBean responseInfoBean;
-    responseInfoBean = new UserResponseInfoBean(
-        result: response.data["result"],
-        desc: response.data["desc"],
-        userid: response.data["userid"]);
-
-    return responseInfoBean;
-  }
-
-  static uploadData({TimelineModel timelineModel, String userId}) async {
-    String url = "http://javacloud.bmob.cn/ff9f06fde1813232/addData";
-
-    String time = timelineModel.time;
-    String content = json.encode(timelineModel.editbeanList);
-
-    var c = {
-      "userId": userId,
-      "time": time,
-      "content": content,
-      "messageType": timelineModel.messageType.index
-    };
-
-    Response response = await post(url, c);
-
-    if (response == null) {
-      return new DataResponseInfoBean(result: false);
-    }
-
-    DataResponseInfoBean dataResponseInfoBean;
-    dataResponseInfoBean = new DataResponseInfoBean(
-        result: response.data["result"],
-        desc: response.data["desc"],
-        objectId: response.data["objectId"]);
-
-    return dataResponseInfoBean;
+    return {"result": false};
   }
 
   static downloadData(String userId) async {
-    String url = "http://javacloud.bmob.cn/ff9f06fde1813232/downLoadData";
+    String key = "objectId";
 
-    var c = {"userId": userId};
+    String url = "https://api2.bmob.cn/1/classes/MessageData";
 
-    Response response = await post(url, c);
-    if (response == null) {
-      return new DataResponseInfoBean(result: false);
+    var dio = new Dio();
+    dio.interceptor.response.onError = (DioError error) {
+      print("error：" + error.toString());
+    };
+
+    Response response;
+    dio.options.headers["X-Bmob-Application-Id"] =
+        "2b3b0a7931e05ebe9c91ea8163d06bdf";
+    dio.options.headers["X-Bmob-REST-API-Key"] =
+        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["Content-Type"] = "application/json";
+
+    String d = '{"userId":"$userId","isDeleted":false}';
+
+    var content = {"keys": "createdTime,content,messageType,objectId"};
+
+    url = url + "?where=" + d;
+
+    print(url);
+
+    try {
+      response = await dio.get(url, data: content);
+
+      if (response.statusCode == 200) {
+        String result = response.data["results"].toString();
+
+        List list = response.data["results"];
+
+        List<TimelineModel> timelineModelList = [];
+
+        for (Map value in list) {
+          Map timelineModelMap = json.decode(value["content"]);
+
+          String url=value["url"];
+
+
+
+          EditbeanList editbeanList =
+              new EditbeanList.fromJson(timelineModelMap);
+
+          TimelineModel timelineModel = new TimelineModel(
+              time: value["createdTime"],
+              editbeanList: editbeanList,
+              id: value["objectId"],
+              messageType: value["messageType"]);
+          timelineModelList.add(timelineModel);
+        }
+
+        return {"result": true, "timelineModelList": timelineModelList};
+      } else {
+        print("update error");
+      }
+    } on DioError catch (e) {
+      print(e.response.data["error"]);
     }
-    DataResponseInfoBean dataResponseInfoBean;
-    dataResponseInfoBean = new DataResponseInfoBean(
-        result: response.data["result"],
-        desc: response.data["desc"],
-        datdaContent: response.data["dataContent"]);
 
-    return dataResponseInfoBean;
+    return {"result": false};
   }
 
   static updateData(TimelineModel model) async {
-    String url = "http://javacloud.bmob.cn/ff9f06fde1813232/updateData";
+    String url = "https://api2.bmob.cn/1/classes/MessageData/";
+    if (model.id == "-1") {
+      return {"result": false};
+    }
+    url = url + model.id;
 
-    var c = {"objectId": model.id, "content": json.encode(model.editbeanList)};
+    var content = {
+      "content": json.encode(model.editbeanList),
+    };
 
-    Response response = await post(url, c);
-    if (response == null) {
-      return new DataResponseInfoBean(result: false);
+    var dio = new Dio();
+    dio.interceptor.response.onError = (DioError error) {
+      print("error：" + error.toString());
+    };
+
+    Response response;
+
+    dio.options.contentType = ContentType.json;
+
+    dio.options.headers["X-Bmob-Application-Id"] =
+        "2b3b0a7931e05ebe9c91ea8163d06bdf";
+    dio.options.headers["X-Bmob-REST-API-Key"] =
+        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["Content-Type"] = "application/json";
+
+    try {
+      response = await dio.put(url, data: content);
+
+      if (response.statusCode == 200) {
+        print("update suucess");
+        return {"result": true};
+      } else {
+        print("update error");
+      }
+    } on DioError catch (e) {
+      print(e.response.data["error"]);
     }
 
-    DataResponseInfoBean dataResponseInfoBean;
-    dataResponseInfoBean = new DataResponseInfoBean(
-      result: response.data["result"],
-      desc: response.data["desc"],
-    );
-
-    return dataResponseInfoBean;
+    return {"result": false};
   }
 
   static deleteData(String id) async {
-    String url = "http://javacloud.bmob.cn/ff9f06fde1813232/deleteData";
+    String url = "https://api2.bmob.cn/1/classes/MessageData/";
+    url = url + id;
 
-    var c = {"objectId": id};
+    var content = {
+      "isDeleted": false,
+    };
 
-    Response response = await post(url, c);
+    var dio = new Dio();
+    dio.interceptor.response.onError = (DioError error) {
+      print("error：" + error.toString());
+    };
 
-    if (response == null) {
-      return new DataResponseInfoBean(result: false);
+    Response response;
+
+    dio.options.contentType = ContentType.json;
+
+    dio.options.headers["X-Bmob-Application-Id"] =
+        "2b3b0a7931e05ebe9c91ea8163d06bdf";
+    dio.options.headers["X-Bmob-REST-API-Key"] =
+        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["Content-Type"] = "application/json";
+
+    try {
+      response = await dio.put(url, data: content);
+
+      if (response.statusCode == 200) {
+        print("update suucess");
+        return {"result": true};
+      } else {
+        print("update error");
+      }
+    } on DioError catch (e) {
+      print(e.response.data["error"]);
     }
-    DataResponseInfoBean dataResponseInfoBean;
 
-    dataResponseInfoBean = new DataResponseInfoBean(
-      result: response.data["result"],
-      desc: response.data["desc"],
-    );
-
-    return dataResponseInfoBean;
-  }
-
-  static demo(url, content) async {
-    Response response = await post(url, content);
-
-    return response;
+    return {"result": false};
   }
 }

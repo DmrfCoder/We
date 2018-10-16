@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_we/beans/constant_bean.dart';
-import 'package:flutter_we/beans/data_responseinfo_bean.dart';
 import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/callback/addprojet_callback.dart';
@@ -14,7 +13,6 @@ import 'package:flutter_we/utils/image_picker_channel_util.dart';
 import 'package:flutter_we/widgets/editor_widget.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-
 
 class AddProjectPage extends StatefulWidget {
   TimelineModel timelineModel;
@@ -35,43 +33,17 @@ class AddprojectState extends State<AddProjectPage>
   ImagePicker _imagePicker = new ImagePickerChannel();
   File _imageFile;
 
-  demo(String imageData,List<int> imageBytes) async {
-    print(imageData);
-
-    var cs = {
-      "content": imageData,
-    };
-
-
-
-    String url = "http://javacloud.bmob.cn/ff9f06fde1813232/uploadPictureDemo";
-
-    http.post(url, body: cs)
-        .then((response) {
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
-    });
-
-
-
-
-  }
-
   void captureImage(ImageSource captureMode) async {
     try {
       var imageFile = await _imagePicker.pickImage(imageSource: captureMode);
       setState(() {
         _imageFile = imageFile;
 
-        print(_imageFile.path);
-
         List<int> imageBytes = _imageFile.readAsBytesSync();
 
         String imageData = base64Encode(imageBytes);
 
-        demo(imageData,imageBytes);
-
-        // _editorControllor.addPicture(imageData);
+        _editorControllor.addPicture(imageData);
       });
     } catch (e) {
       print(e);

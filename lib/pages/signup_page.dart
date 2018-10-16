@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_we/beans/user_responseinfo_bean.dart';
 import 'package:flutter_we/utils/http_util.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -12,7 +11,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUpPage> {
-  final TextEditingController _usernameController = new TextEditingController();
+  final TextEditingController _password2Controller =
+      new TextEditingController();
   final TextEditingController _passwordController = new TextEditingController();
   final TextEditingController _phoneController = new TextEditingController();
 
@@ -23,7 +23,7 @@ class _SignUpState extends State<SignUpPage> {
   Future _handleSubmitted() async {
     _checkInput();
 
-    if (_usernameController.text == '' ||
+    if (_password2Controller.text == '' ||
         _passwordController.text == '' ||
         _passwordController.text == '') {
       Fluttertoast.showToast(
@@ -35,21 +35,9 @@ class _SignUpState extends State<SignUpPage> {
           textcolor: '#ffffff');
 
       return;
-    }
-
-    showProgress = true;
-    UserResponseInfoBean value = await HttpUtil.signup(
-        phonenumber: _phoneController.text,
-        password: _passwordController.text,
-        nickname: _usernameController.text);
-
-    if (value == null) {
-      setState(() {
-        showProgress = false;
-      });
-
+    } else if (_passwordController.text != _password2Controller.text) {
       Fluttertoast.showToast(
-          msg: "注册失败，请检查您的网络！",
+          msg: "两次密码不一致！",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 1,
@@ -58,7 +46,13 @@ class _SignUpState extends State<SignUpPage> {
       return;
     }
 
-    if (value.result) {
+    showProgress = true;
+    var value = await HttpUtil.signup(
+      phonenumber: _phoneController.text,
+      password: _passwordController.text,
+    );
+
+    if (value["result"]) {
       setState(() {
         showProgress = false;
       });
@@ -74,7 +68,7 @@ class _SignUpState extends State<SignUpPage> {
       List<String> onBackInfo = [
         _phoneController.text,
         _passwordController.text,
-        value.userid
+        value["user_id"]
       ];
 
       Navigator.of(context).pop(onBackInfo);
@@ -84,12 +78,13 @@ class _SignUpState extends State<SignUpPage> {
       });
 
       Fluttertoast.showToast(
-          msg: value.desc,
+          msg: value["error"] == null ? "注册失败，请检查您的网络！" : value["error"],
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 1,
           bgcolor: "#e74c3c",
           textcolor: '#ffffff');
+      return;
     }
   }
 
@@ -162,12 +157,13 @@ class _SignUpState extends State<SignUpPage> {
                       new Container(
                         padding: const EdgeInsets.only(top: 32.0),
                         child: new TextField(
-                          controller: _usernameController,
+                          obscureText: true,
+                          controller: _password2Controller,
                           cursorColor: Colors.black,
                           decoration: new InputDecoration(
-                            hintText: '用户名称',
+                            hintText: '密码',
                             icon: new Icon(
-                              Icons.account_circle,
+                              Icons.lock_outline,
                               color: Colors.white,
                             ),
                           ),
@@ -184,7 +180,7 @@ class _SignUpState extends State<SignUpPage> {
                           keyboardType: TextInputType.text,
                           cursorColor: Colors.black,
                           decoration: new InputDecoration(
-                            hintText: '密码',
+                            hintText: '确认密码',
                             icon: new Icon(
                               Icons.lock_outline,
                               color: Colors.white,

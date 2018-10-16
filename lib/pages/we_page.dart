@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_we/animation/floatingbutton_animation.dart';
 import 'package:flutter_we/beans/constant_bean.dart';
-import 'package:flutter_we/beans/data_responseinfo_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/beans/events_bean.dart';
 import 'package:flutter_we/callback/floatingbutton_iconclickcallback_callback.dart';
@@ -49,9 +48,7 @@ class WeListPageState extends State<WeListPage>
   }
 
   updateState(WeControllor state) {
-    setState(() {
-      weControllor = state;
-    });
+    weControllor = state;
   }
 
   @override
@@ -139,21 +136,17 @@ class WeListPageState extends State<WeListPage>
     );
   }
 
-  startAddProjectPage(TimelineModel timelineModel,EditType editType) {
+  startAddProjectPage(TimelineModel timelineModel, EditType editType) {
     Navigator.push(context,
         new MaterialPageRoute(builder: (BuildContext context) {
-      return new AddProjectPage(timelineModel, weControllor,editType);
+      return new AddProjectPage(timelineModel, weControllor, editType);
     }));
   }
 
   @override
   void floatIconOnClick(MessageType messageType) {
     // TODO: implement floatIconOnClick
-    startAddProjectPage(new TimelineModel(messageType: messageType),EditType.add);
-
+    startAddProjectPage(
+        new TimelineModel(messageType: messageType), EditType.add);
   }
-
-
-
-
 }

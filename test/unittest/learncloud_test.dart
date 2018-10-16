@@ -13,12 +13,10 @@ import 'package:http/http.dart' as http;
 void main() {
   test("sign up test", () async {
     String url = "https://api2.bmob.cn/1/users";
-    var content = {"password": "dedede", "username": "15651809891"};
+    var content = {"password": "319319", "username": "15651808915"};
 
     var dio = new Dio();
-    dio.interceptor.response.onError = (DioError error) {
-      print("error：" + error.toString());
-    };
+
 
     Response response;
 
@@ -32,7 +30,8 @@ void main() {
     try {
       response = await dio.post(url, data: content);
 
-      if (response.statusCode == 200) {
+      print(response.statusCode.toString());
+      if (response.statusCode == 201) {
         String user_id = response.data["objectId"];
         print("user_id:" + user_id);
       }
