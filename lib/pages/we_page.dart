@@ -11,7 +11,6 @@ import 'package:flutter_we/beans/events_bean.dart';
 import 'package:flutter_we/callback/floatingbutton_iconclickcallback_callback.dart';
 import 'package:flutter_we/controllor/we_controllor.dart';
 import 'package:flutter_we/pages/addproject_page.dart';
-import 'package:flutter_we/utils/file_util.dart';
 import 'package:flutter_we/utils/http_util.dart';
 import 'package:flutter_we/widgets/timeline_widget.dart';
 
@@ -42,13 +41,14 @@ class WeListPageState extends State<WeListPage>
   void dispose() {
     // TODO: implement dispose
 
-    weControllor.dispose();
 
     super.dispose();
   }
 
   updateState(WeControllor state) {
-    weControllor = state;
+    setState(() {
+      weControllor = state;
+    });
   }
 
   @override

@@ -10,7 +10,6 @@ import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/callback/editor_callback.dart';
 import 'package:flutter_we/controllor/editor_controllor.dart';
 import 'package:flutter_we/pages/addproject_page.dart';
-import 'package:flutter_we/utils/file_util.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ImageWidget extends StatefulWidget {
@@ -25,24 +24,18 @@ class ImageWidget extends StatefulWidget {
 }
 
 class ImageWidgetState extends State<ImageWidget> {
-
-
   var imageByte;
 
   Future initFile() async {
     print("initFile");
-    imageByte=base64Decode(widget.editBean.content);
+    imageByte = base64Decode(widget.editBean.content);
   }
-
-
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     initFile();
-
-
   }
 
   @override

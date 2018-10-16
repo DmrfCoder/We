@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 
 void main() {
   test("insert data to db test", () async {
-    int result = await DbUtil.insertDataToDb("test", "");
+
 
 
   });

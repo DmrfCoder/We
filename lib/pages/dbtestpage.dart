@@ -138,22 +138,22 @@ class _DbPageState extends State<DbPage> {
   }
 
   _insert() async {
-    int result = await DbUtil.insertDataToDb("test", "");
+    int result = await DbUtil.insertDataToDb("test", null);
     print("insert result:" + result.toString());
   }
 
   _query() async {
-    int result = await DbUtil.queryDataDb();
+    int result = await DbUtil.queryDataDb(null);
     print("query result:" + result.toString());
   }
 
   _delete() async {
-    int result = await DbUtil.deleteDataDb(1);
-    print("delete result:" + result.toString());
+  //  int result = await DbUtil.deleteDataDb(1, null);
+   // print("delete result:" + result.toString());
   }
 
   _update() async {
-    int result = await DbUtil.updateDataDb(3, "");
-    print("update result:" + result.toString());
+//    int result = await DbUtil.updateDataDb(3, null, null);
+//    print("update result:" + result.toString());
   }
 }
