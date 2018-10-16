@@ -67,23 +67,23 @@ class ImageWidgetState extends State<ImageWidget> {
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
-          return new SimpleDialog(
+          return new CupertinoAlertDialog(
             title: new Text("确认删除该图片？"),
-            children: <Widget>[
-              new SimpleDialogOption(
+            actions: <Widget>[
+              new CupertinoDialogAction(
+                child: const Text('确定'),
                 onPressed: () {
                   widget.editorCallBack.updateEditBeanData(
                       changeType: ChangeType.delete, editBean: widget.editBean);
 
                   Navigator.pop(context);
                 },
-                child: const Text('确定'),
               ),
-              new SimpleDialogOption(
+              new CupertinoDialogAction(
+                child: const Text('取消'),
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text('取消'),
               ),
             ],
           );
