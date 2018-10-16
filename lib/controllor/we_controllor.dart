@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_we/beans/constant_bean.dart';
 import 'package:flutter_we/beans/data_responseinfo_bean.dart';
 import 'package:flutter_we/beans/edit_list_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
@@ -41,7 +43,7 @@ class WeControllor
 
     if (userid.isNotEmpty && needdownLoadData) {
       DataResponseInfoBean dataResponseInfoBean =
-          await HttpUtil.downloadData(userid);
+      await HttpUtil.downloadData(userid);
 
       if (dataResponseInfoBean.result) {
         Map map = dataResponseInfoBean.datdaContent;
@@ -50,10 +52,13 @@ class WeControllor
           Map timelineModelMap = json.decode(value["content"]);
 
           EditbeanList editbeanList =
-              new EditbeanList.fromJson(timelineModelMap);
+          new EditbeanList.fromJson(timelineModelMap);
 
           TimelineModel timelineModel = new TimelineModel(
-              time: value["createdTime"], editbeanList: editbeanList, id: key);
+              time: value["createdTime"],
+              editbeanList: editbeanList,
+              id: key,
+              messageType: value["messageType"]);
 
           timeLineModels.add(timelineModel);
         });
@@ -74,10 +79,10 @@ class WeControllor
           try {
             Map timelineModelMap = json.decode(jsoncontentfuture);
             var timelineModel =
-                new TimeLineModelList.fromJson(timelineModelMap);
+            new TimeLineModelList.fromJson(timelineModelMap);
             timeLineModels = timelineModel.list;
 
-            print("get data from io:"+timelineModel.list.length.toString());
+            print("get data from io:" + timelineModel.list.length.toString());
 
             weListPageState.updateState(this);
           } catch (e) {
@@ -141,7 +146,7 @@ class WeControllor
 
   @override
   onTap(String id) {
-    weListPageState.startAddProjectPage(getIdModel(id));
+    weListPageState.startAddProjectPage(getIdModel(id), EditType.edit);
 
     // TODO: implement onTap
   }
@@ -157,7 +162,7 @@ class WeControllor
     dispose();
 
     DataResponseInfoBean dataResponseInfoBean =
-        await HttpUtil.uploadData(timelineModel: timelineModel, userId: userid);
+    await HttpUtil.uploadData(timelineModel: timelineModel, userId: userid);
 
     if (dataResponseInfoBean.result != null && dataResponseInfoBean.result) {
       timelineModel.id = dataResponseInfoBean.objectId;
@@ -166,8 +171,6 @@ class WeControllor
       timelineModel.id = timeLineModels.length.toString();
       print("update data faild");
     }
-
-
   }
 
   @override
@@ -194,7 +197,7 @@ class WeControllor
     weListPageState.updateState(this);
 
     DataResponseInfoBean dataResponseInfoBean =
-        await HttpUtil.updateData(timelineModel);
+    await HttpUtil.updateData(timelineModel);
 
     if (dataResponseInfoBean.result != null && dataResponseInfoBean.result) {
       print("update data success");
@@ -204,4 +207,6 @@ class WeControllor
 
     dispose();
   }
+
+
 }

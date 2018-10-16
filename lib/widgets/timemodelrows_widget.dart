@@ -71,7 +71,6 @@ class TimeLineModelState extends State<TimeModelRow> {
                 color: Colors.black,
                 fontSize: 15.0),
           ),
-
         ),
       ],
     );
@@ -132,17 +131,34 @@ class TimeLineModelState extends State<TimeModelRow> {
   }
 
   getPositionImage() {
-    switch (widget.locationType) {
-      case LocationType.center:
-        return new ExactAssetImage('images/heart_center.png');
-      case LocationType.alone:
-        return new ExactAssetImage('images/heart_alone.png');
-      case LocationType.bottom:
-        return new ExactAssetImage('images/heart_bottom.png');
-      case LocationType.top:
-        return new ExactAssetImage('images/heart_top.png');
-      default:
-        return new ExactAssetImage('images/heart_alone.png');
+    if (widget.model.messageType == MessageType.bad) {
+      switch (widget.locationType) {
+        case LocationType.center:
+          return new ExactAssetImage('images/black_heart_center.png');
+        case LocationType.alone:
+          return new ExactAssetImage('images/black_heart_alone.png');
+        case LocationType.bottom:
+          return new ExactAssetImage('images/black_heart_bottom.png');
+        case LocationType.top:
+          return new ExactAssetImage('images/black_heart_top.png');
+        default:
+          return new ExactAssetImage('images/black_heart_alone.png');
+      }
+    }else{
+      switch (widget.locationType) {
+        case LocationType.center:
+          return new ExactAssetImage('images/heart_center.png');
+        case LocationType.alone:
+          return new ExactAssetImage('images/heart_alone.png');
+        case LocationType.bottom:
+          return new ExactAssetImage('images/heart_bottom.png');
+        case LocationType.top:
+          return new ExactAssetImage('images/heart_top.png');
+        default:
+          return new ExactAssetImage('images/heart_alone.png');
+      }
     }
+
+
   }
 }

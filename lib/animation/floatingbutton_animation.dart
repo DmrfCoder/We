@@ -1,11 +1,14 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_we/beans/constant_bean.dart';
+import 'package:flutter_we/callback/floatingbutton_iconclickcallback_callback.dart';
 
 class AnimatedFab extends StatefulWidget {
-  final VoidCallback onClick;
+  final FloatButtonIconClickCallBack floatButtonIconClickCallBack;
 
-  const AnimatedFab({Key key, this.onClick}) : super(key: key);
+  const AnimatedFab({Key key, this.floatButtonIconClickCallBack})
+      : super(key: key);
 
   @override
   _AnimatedFabState createState() => new _AnimatedFabState();
@@ -60,7 +63,8 @@ class _AnimatedFabState extends State<AnimatedFab>
                         ),
                       ),
                     ),
-                    -math.pi / 5),
+                    -math.pi / 5,
+                    MessageType.bad),
                 _buildOption(
                     new Container(
                       width: 40.0,
@@ -71,7 +75,8 @@ class _AnimatedFabState extends State<AnimatedFab>
                         ),
                       ),
                     ),
-                    math.pi / 5),
+                    math.pi / 5,
+                    MessageType.nice),
                 _buildFabCore(),
               ],
             );
@@ -89,12 +94,12 @@ class _AnimatedFabState extends State<AnimatedFab>
     );
   }
 
-  Widget _buildOption(Widget icon, double angle) {
+  Widget _buildOption(Widget icon, double angle, MessageType messageType) {
     double iconSize = 0.0;
     if (_animationController.value > 0.8) {
       iconSize = 26.0 * (_animationController.value - 0.8) * 5;
     }
-    iconSize = iconSize * 1.3;
+    iconSize = iconSize * 2.3;
     return new Transform.rotate(
       angle: angle,
       child: new Align(
@@ -102,7 +107,7 @@ class _AnimatedFabState extends State<AnimatedFab>
         child: new Padding(
           padding: new EdgeInsets.only(top: 8.0),
           child: new IconButton(
-            onPressed: _onIconClick,
+            onPressed: () => _onIconClick(messageType),
             icon: new Transform.rotate(angle: -angle, child: icon),
             iconSize: iconSize,
             alignment: Alignment.center,
@@ -160,8 +165,8 @@ class _AnimatedFabState extends State<AnimatedFab>
     }
   }
 
-  _onIconClick() {
-    widget.onClick();
+  _onIconClick(MessageType messageType) {
+    widget.floatButtonIconClickCallBack.floatIconOnClick(messageType);
     close();
   }
 }

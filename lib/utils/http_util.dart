@@ -11,16 +11,23 @@ import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/beans/user_responseinfo_bean.dart';
 
 class HttpUtil {
-  static _post(String url, var content) async {
+  static post(String url, var content) async {
     var dio = new Dio();
     dio.interceptor.response.onError = (DioError error) {
-      print("error："+error.toString());
-      //print(error.response.statusCode);
+      print("error：" + error.toString());
     };
 
+
+
+
     Response r;
-    dio.options.connectTimeout = 5000; //5s
-    dio.options.receiveTimeout = 5000;
+
+    dio.options.contentType = ContentType.json;
+    dio.options.headers["X-Bmob-Application-Id"] = "2b3b0a7931e05ebe9c91ea8163d06bdf";
+    dio.options.headers["X-Bmob-REST-API-Key"] = "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["Content-Type"] = "application/json";
+
+
     try {
       r = await dio.post(url, data: content);
     } on DioError catch (e) {
@@ -34,15 +41,15 @@ class HttpUtil {
 
   //注册
   static signup({String phonenumber, String password, String nickname}) async {
-    String url = "http://javacloud.bmob.cn/ff9f06fde1813232/signUp";
+    String url = "https://api2.bmob.cn/1/users";
 
     var c = {
       "username": nickname,
-      "phonenumber": phonenumber,
+      "mobilePhoneNumber": phonenumber,
       "password": password
     };
 
-    Response response = await _post(url, c);
+    Response response = await post(url, c);
 
     if (response == null) {
       return new DataResponseInfoBean(result: false);
@@ -61,7 +68,7 @@ class HttpUtil {
     String url = "http://javacloud.bmob.cn/ff9f06fde1813232/logIn";
 
     var c = {"phonenumber": phonenumber, "password": password};
-    Response response = await _post(url, c);
+    Response response = await post(url, c);
 
     if (response == null) {
       return new DataResponseInfoBean(result: false);
@@ -82,10 +89,14 @@ class HttpUtil {
     String time = timelineModel.time;
     String content = json.encode(timelineModel.editbeanList);
 
+    var c = {
+      "userId": userId,
+      "time": time,
+      "content": content,
+      "messageType": timelineModel.messageType.index
+    };
 
-    var c = {"userId": userId, "time": time, "content": content};
-
-    Response response = await _post(url, c);
+    Response response = await post(url, c);
 
     if (response == null) {
       return new DataResponseInfoBean(result: false);
@@ -105,7 +116,7 @@ class HttpUtil {
 
     var c = {"userId": userId};
 
-    Response response = await _post(url, c);
+    Response response = await post(url, c);
     if (response == null) {
       return new DataResponseInfoBean(result: false);
     }
@@ -123,7 +134,7 @@ class HttpUtil {
 
     var c = {"objectId": model.id, "content": json.encode(model.editbeanList)};
 
-    Response response = await _post(url, c);
+    Response response = await post(url, c);
     if (response == null) {
       return new DataResponseInfoBean(result: false);
     }
@@ -142,7 +153,7 @@ class HttpUtil {
 
     var c = {"objectId": id};
 
-    Response response = await _post(url, c);
+    Response response = await post(url, c);
 
     if (response == null) {
       return new DataResponseInfoBean(result: false);
@@ -155,5 +166,11 @@ class HttpUtil {
     );
 
     return dataResponseInfoBean;
+  }
+
+  static demo(url, content) async {
+    Response response = await post(url, content);
+
+    return response;
   }
 }

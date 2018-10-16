@@ -14,35 +14,34 @@ import 'package:flutter_we/widgets/text_widget.dart';
 import 'package:path/path.dart';
 
 class EditorControllor {
-  EditbeanList _editbeanList;
-
   TimelineModel _timelineModel;
 
   TimeLineModelEditCallBack _timeLineModelEditCallBack;
 
-  var children;
+  List<Widget> children;
 
   EditType _editType;
 
   EditType get editType => _editType;
 
-  EditorControllor(this._timeLineModelEditCallBack) {
-    _editbeanList = new EditbeanList();
+  getDataList(){
+    return _timelineModel.editbeanList.list;
+  }
+
+  EditorControllor(this._timeLineModelEditCallBack, this._timelineModel) {
     _curIndex = 0;
     children = <Widget>[];
-
-    _editbeanList.addEditBean("", _curIndex, true);
 
     _editType = EditType.add;
   }
 
   set editType(EditType value) {
     _editType = value;
-  }
-
-  set timelineModel(TimelineModel value) {
-    _timelineModel = value;
-    _editbeanList = _timelineModel.editbeanList;
+    if (_editType == EditType.add) {
+      EditBean editBean = new EditBean(_curIndex, true, "");
+      _timelineModel.editbeanList.list.add(editBean);
+      _timeLineModelEditCallBack.updateTimelineModel(_timelineModel);
+    }
   }
 
   int _curIndex;
@@ -52,7 +51,7 @@ class EditorControllor {
   updateCurEditbean(EditBean curEditbean) {
     int value = curEditbean.index;
 
-    if (value < 0 || value >= _editbeanList.list.length) {
+    if (value < 0 || value >= _timelineModel.getLength()) {
       return false;
     } else {
       _curIndex = value;
@@ -61,22 +60,16 @@ class EditorControllor {
   }
 
   clear() {
-    _editbeanList = null;
+    _timelineModel.clear();
     _curIndex = 0;
-  }
-
-  EditbeanList get editbeanList => _editbeanList;
-
-  set editbeanList(EditbeanList value) {
-    _editbeanList = value;
   }
 
   deleteEditbean(EditBean editbean) {
     int index = editbean.index;
-    if (index < 0 || index > _editbeanList.list.length) {
+    if (index < 0 || index > _timelineModel.getLength()) {
       return false;
     } else {
-      _editbeanList.list.removeAt(index);
+      _timelineModel.removeAt(index);
       print('delete');
 
       return true;
@@ -85,37 +78,38 @@ class EditorControllor {
 
   updateEditbean(EditBean editbean) {
     int index = editbean.index;
-    if (index < 0 || index >= _editbeanList.list.length) {
+    if (index < 0 || index >= _timelineModel.getLength()) {
       return false;
     } else {
-      _editbeanList.list[index] = editbean;
+      _timelineModel.setData(index, editbean);
       return true;
     }
   }
 
   addPicture(String strImage) {
-    _curIndex = _editbeanList.addEditBean(strImage, _curIndex, false);
+    _curIndex =
+        _timelineModel.editbeanList.addEditBean(strImage, _curIndex, false);
   }
 
   dispose() {
     List<EditBean> removeItems = [];
 
-    for (EditBean editbeanItem in editbeanList.list) {
+    for (EditBean editbeanItem in _timelineModel.editbeanList.list) {
       if (editbeanItem.isText) {
         if (editbeanItem.content.isEmpty) {
-          print('remove');
+          print('remove empty widget in editor_controllor');
           removeItems.add(editbeanItem);
         }
       }
     }
 
     for (EditBean editbeanItem in removeItems) {
-      editbeanList.list.remove(editbeanItem);
+      _timelineModel.editbeanList.list.remove(editbeanItem);
     }
 
     bool emptyFlag = false;
 
-    if (editbeanList.list.length == 0) {
+    if (_timelineModel.getLength() == 0) {
       emptyFlag = true;
     }
 
@@ -127,16 +121,10 @@ class EditorControllor {
       DateTime now = new DateTime.now();
       String time = now.toString();
       time = time.substring(0, time.lastIndexOf(":"));
+      _timelineModel.time = time;
 
-      TimelineModel timelineModel = new TimelineModel(
-        time: time,
-        editbeanList: editbeanList,
-      );
-      String js = json.encode(timelineModel);
-
-      _timeLineModelEditCallBack.addTimelineModel(timelineModel);
+      _timeLineModelEditCallBack.addTimelineModel(_timelineModel);
     } else {
-      _timelineModel.editbeanList = editbeanList;
       if (emptyFlag) {
         _timeLineModelEditCallBack.deleteTimelineModel(_timelineModel);
       } else {

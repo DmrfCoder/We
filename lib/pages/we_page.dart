@@ -2,13 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_we/animation/floatingbutton_animation.dart';
+import 'package:flutter_we/beans/constant_bean.dart';
+import 'package:flutter_we/beans/data_responseinfo_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/beans/events_bean.dart';
+import 'package:flutter_we/callback/floatingbutton_iconclickcallback_callback.dart';
 import 'package:flutter_we/controllor/we_controllor.dart';
 import 'package:flutter_we/pages/addproject_page.dart';
 import 'package:flutter_we/utils/file_util.dart';
+import 'package:flutter_we/utils/http_util.dart';
 import 'package:flutter_we/widgets/timeline_widget.dart';
 
 class WeListPage extends StatefulWidget {
@@ -20,7 +25,8 @@ class WeListPage extends StatefulWidget {
   WeListPageState createState() => new WeListPageState();
 }
 
-class WeListPageState extends State<WeListPage> {
+class WeListPageState extends State<WeListPage>
+    implements FloatButtonIconClickCallBack {
   WeControllor weControllor;
 
   //可以在该方法中初始化数据
@@ -111,7 +117,7 @@ class WeListPageState extends State<WeListPage> {
                   child: new Container(
                 padding: EdgeInsets.only(bottom: 40.0),
                 child: new AnimatedFab(
-                  onClick: () => startAddProjectPage(null),
+                  floatButtonIconClickCallBack: this,
                 ),
               ))
             ],
@@ -133,16 +139,21 @@ class WeListPageState extends State<WeListPage> {
     );
   }
 
-  startAddProjectPage(TimelineModel timelineModel) {
+  startAddProjectPage(TimelineModel timelineModel,EditType editType) {
     Navigator.push(context,
         new MaterialPageRoute(builder: (BuildContext context) {
-      return new AddProjectPage(timelineModel, weControllor);
+      return new AddProjectPage(timelineModel, weControllor,editType);
     }));
   }
 
-//    new TimelineComponent(
-//      timelineList: weControllor.timeLineModels,
-//      listviewItemClickCallBack: weControllor,
-//    ),
+  @override
+  void floatIconOnClick(MessageType messageType) {
+    // TODO: implement floatIconOnClick
+    startAddProjectPage(new TimelineModel(messageType: messageType),EditType.add);
+
+  }
+
+
+
 
 }
