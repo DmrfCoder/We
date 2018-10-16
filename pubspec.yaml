@@ -28,6 +28,8 @@ dependencies:
 
   shared_preferences: ^0.4.3
 
+  sqflite: any
+
 
 
 

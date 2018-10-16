@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 import 'package:flutter_we/pages/addproject_page.dart';
+import 'package:flutter_we/pages/dbtestpage.dart';
 import 'package:flutter_we/pages/login_page.dart';
 import 'package:flutter_we/pages/we_page.dart';
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
           // counter didn't reset back to zero; the application is not restarted.
           primarySwatch: Colors.pink,
           primaryColor: Colors.white),
-      home: new LoginPage(),
+      home: new DbPage(),
     );
   }
 }
