@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_we/beans/constant_bean.dart';
 import 'package:flutter_we/beans/edit_list_bean.dart';
@@ -72,21 +73,21 @@ class WeControllor
       showDialog(
           context: weListPageState.context,
           builder: (BuildContext ctx) {
-            return new SimpleDialog(
+            return new CupertinoAlertDialog(
               title: new Text("确认删除该条目？"),
-              children: <Widget>[
-                new SimpleDialogOption(
+              actions: <Widget>[
+                new CupertinoDialogAction(
+                  child: const Text('确定'),
                   onPressed: () {
                     deleteTimeLineModelById(id);
                     Navigator.pop(weListPageState.context);
                   },
-                  child: const Text('确定'),
                 ),
-                new SimpleDialogOption(
+                new CupertinoDialogAction(
+                  child: const Text('取消'),
                   onPressed: () {
                     Navigator.pop(weListPageState.context);
                   },
-                  child: const Text('取消'),
                 ),
               ],
             );
@@ -97,8 +98,6 @@ class WeControllor
   deleteTimeLineModelById(String id) async {
     TimelineModel timelineModel = new TimelineModel(id: id);
     deleteTimelineModel(timelineModel);
-
-
   }
 
   @override
