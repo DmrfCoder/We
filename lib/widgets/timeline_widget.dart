@@ -102,6 +102,8 @@ class TimelineComponentState extends State<TimelineComponent>
       }
       child.add(timeModelRow2);
     }
+
+
     return new Expanded(
       child: new ListView(
         children: child,

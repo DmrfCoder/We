@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_we/beans/constant_bean.dart' as GlogbalBean;
 import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/edit_list_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
@@ -97,31 +98,12 @@ class HttpUtil {
   static uploadData({TimelineModel timelineModel, String userId}) async {
     String url = "https://api2.bmob.cn/1/classes/MessageData";
 
-    Map<int, String> picMap = new Map();
-
-    List<EditBean> pictureIndex = [];
-
-    int size = timelineModel.editbeanList.list.length;
-
-    for (int index = 0; index < size; index++) {
-      EditBean e = timelineModel.editbeanList.list[index];
-
-      if (!e.isText) {
-        picMap[e.index] = e.content;
-        pictureIndex.add(e);
-      }
-    }
-
-    for (EditBean e in pictureIndex) {
-      timelineModel.editbeanList.list.remove(e);
-    }
-
     var content = {
-      "userid": userId,
-      "messageType": timelineModel.messageType.index,
+      "messageType":
+          timelineModel.messageType == GlogbalBean.MessageType.nice ? 0 : 1,
       "isDeleted": false,
-      "content": json.encode(timelineModel.editbeanList),
       "createdTime": timelineModel.time,
+      "content": json.encode(timelineModel.editbeanList)
     };
 
     var dio = new Dio();
@@ -144,25 +126,15 @@ class HttpUtil {
 
       if (response.statusCode == 201) {
         String object_id = response.data["objectId"];
-
-        if (picMap.length == 0) {
-          print("object_id:" + object_id);
-          return {"result": true, "object_id": object_id};
-        } else {
-          var upFileResponse =await _uploadfile(
-              userId + "_" + object_id + "picture.txt", picMap.toString());
-
-          String picFileUrl = "";
-          if (!upFileResponse["result"]) {
-            print(upFileResponse["error"]);
-          } else {
-            picFileUrl = upFileResponse["url"];
-            return _updatePictureUrl(object_id, picFileUrl);
-          }
-        }
+        return {"result": true, "object_id": object_id};
+      } else {
+        print(response.data);
+        print(response.statusCode.toString());
       }
     } on DioError catch (e) {
       print(e.response.data["error"]);
+    }catch (e){
+      print(e.toString());
     }
 
     return {"result": false};
@@ -246,9 +218,7 @@ class HttpUtil {
         for (Map value in list) {
           Map timelineModelMap = json.decode(value["content"]);
 
-          String url=value["url"];
-
-
+          String url = value["url"];
 
           EditbeanList editbeanList =
               new EditbeanList.fromJson(timelineModelMap);
