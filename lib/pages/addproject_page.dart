@@ -9,10 +9,10 @@ import 'package:flutter_we/callback/addprojet_callback.dart';
 import 'package:flutter_we/callback/timelinemodeledit_callback.dart';
 import 'package:flutter_we/controllor/editor_controllor.dart';
 import 'package:flutter_we/utils/http_util.dart';
-import 'package:flutter_we/utils/image_picker_channel_util.dart';
 import 'package:flutter_we/widgets/editor_widget.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class AddProjectPage extends StatefulWidget {
   TimelineModel timelineModel;
@@ -30,39 +30,21 @@ class AddProjectPage extends StatefulWidget {
 
 class AddprojectState extends State<AddProjectPage>
     implements AddProjectPageCallBack {
-  ImagePicker _imagePicker = new ImagePickerChannel();
   File _imageFile;
 
   void captureImage(ImageSource captureMode) async {
-    /**
-     *  var imageFile =
-        await pinker.ImagePicker.pickImage(source: ImageSource.gallery);
-        _imageFile = imageFile;
+    var imageFile =
+        await ImagePicker.pickImage(source: ImageSource.gallery);
+    _imageFile = imageFile;
 
-        if(_imageFile==null){
-        return;
-        }
-        List<int> imageBytes = _imageFile.readAsBytesSync();
-
-        String imageData = base64Encode(imageBytes);
-
-        _editorControllor.addPicture(imageData);
-     */
-
-    try {
-      var imageFile = await _imagePicker.pickImage(imageSource: captureMode);
-      setState(() {
-        _imageFile = imageFile;
-
-        List<int> imageBytes = _imageFile.readAsBytesSync();
-
-        String imageData = base64Encode(imageBytes);
-
-        _editorControllor.addPicture(imageData);
-      });
-    } catch (e) {
-      print(e);
+    if (_imageFile == null) {
+      return;
     }
+    List<int> imageBytes = _imageFile.readAsBytesSync();
+
+    String imageData = base64Encode(imageBytes);
+
+    _editorControllor.addPicture(imageData);
   }
 
   EditorControllor _editorControllor;

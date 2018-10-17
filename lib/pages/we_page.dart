@@ -118,7 +118,6 @@ class WeListPageState extends State<WeListPage>
               ),
               new Center(
                   child: new Container(
-                padding: EdgeInsets.only(bottom: 30.0),
                 child: new AnimatedFab(
                   floatButtonIconClickCallBack: this,
                 ),
