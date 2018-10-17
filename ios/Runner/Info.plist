@@ -43,5 +43,9 @@
 	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>Access camera and photos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>image pinker</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>image pinker</string>
 </dict>
 </plist>

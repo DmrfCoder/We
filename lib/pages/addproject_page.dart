@@ -34,6 +34,21 @@ class AddprojectState extends State<AddProjectPage>
   File _imageFile;
 
   void captureImage(ImageSource captureMode) async {
+    /**
+     *  var imageFile =
+        await pinker.ImagePicker.pickImage(source: ImageSource.gallery);
+        _imageFile = imageFile;
+
+        if(_imageFile==null){
+        return;
+        }
+        List<int> imageBytes = _imageFile.readAsBytesSync();
+
+        String imageData = base64Encode(imageBytes);
+
+        _editorControllor.addPicture(imageData);
+     */
+
     try {
       var imageFile = await _imagePicker.pickImage(imageSource: captureMode);
       setState(() {
@@ -122,7 +137,7 @@ class AddprojectState extends State<AddProjectPage>
           ),
           onPressed: () {
             //做选择图片的操作
-            captureImage(ImageSource.photos);
+            captureImage(null);
           }),
     );
 

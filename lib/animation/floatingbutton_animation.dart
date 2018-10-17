@@ -19,8 +19,8 @@ class _AnimatedFabState extends State<AnimatedFab>
   AnimationController _animationController;
   Animation<Color> _colorAnimation;
 
-  final double expandedSize = 180.0;
-  final double hiddenSize = 20.0;
+  final double expandedSize = 120.0;
+  final double hiddenSize = 10.0;
 
 
 
@@ -73,7 +73,7 @@ class _AnimatedFabState extends State<AnimatedFab>
                     MessageType.bad),
                 _buildOption(
                     new Container(
-                      width: 40.0,
+                      width: 30.0,
                       decoration: new BoxDecoration(
                         image: new DecorationImage(
                           image: new ExactAssetImage('images/heart_alone.png'),
@@ -139,6 +139,7 @@ class _AnimatedFabState extends State<AnimatedFab>
     double scaleFactor = 2 * (_animationController.value - 0.5).abs();
     return new FloatingActionButton(
       onPressed: _onFabTap,
+      mini: true,
       child: new Transform(
         alignment: Alignment.center,
         transform: new Matrix4.identity()..scale(1.0, scaleFactor),

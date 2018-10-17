@@ -53,6 +53,20 @@ class WeListPageState extends State<WeListPage>
     });
   }
 
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  void _logCounter() {
+    setState(() {
+      print(_counter);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -108,22 +122,10 @@ class WeListPageState extends State<WeListPage>
                 child: new AnimatedFab(
                   floatButtonIconClickCallBack: this,
                 ),
-              ))
+              )),
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTimeline() {
-    return new Positioned(
-      top: 0.0,
-      bottom: 0.0,
-      left: MediaQuery.of(context).size.width / 2,
-      child: new Container(
-        width: 2.0,
-        color: Colors.red[300],
       ),
     );
   }

@@ -29,6 +29,8 @@ dependencies:
 
   sqflite: any
 
+  image_picker: ^0.4.10
+
 
 
 
@@ -75,6 +77,8 @@ flutter:
   - images/black_heart_bottom.png
   - images/save.png
   - images/picture.png
+
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
