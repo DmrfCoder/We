@@ -27,9 +27,6 @@ class TimeModelRow extends StatefulWidget {
 
 class TimeLineModelState extends State<TimeModelRow> {
   Widget _buildContentColumnTime(BuildContext context) {
-    Paint paint = new Paint();
-    paint.color = Colors.transparent;
-
     return new Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -39,9 +36,11 @@ class TimeLineModelState extends State<TimeModelRow> {
           child: new Text(
             widget.model.time,
             style: new TextStyle(
-                //background: paint,
-                color: Colors.black,
-                fontSize: 15.0),
+              //background: paint,
+              color: Colors.black,
+              fontSize: 15.0,
+            ),
+            textAlign: TextAlign.center,
           ),
         ),
       ],
@@ -65,7 +64,9 @@ class TimeLineModelState extends State<TimeModelRow> {
       children: <Widget>[
         new Container(
           child: new Text(
-            content.length > 20 ? content.substring(0, 20) + "..." : content,
+            content,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 4,
             style: new TextStyle(
                 //background: paint,
                 color: Colors.black,
@@ -94,13 +95,16 @@ class TimeLineModelState extends State<TimeModelRow> {
   Widget build(BuildContext context) {
     center_x = MediaQuery.of(context).size.width / 2;
     // TODO: implement build
-    return new GestureDetector(
+    return new InkWell(
+      onTap:()=> widget.listviewItemClickCallBack.onTap(widget.model.id),
+      onLongPress:()=>
+          widget.listviewItemClickCallBack.onLongPress(widget.model.id),
       child: new Container(
         height: 80.0,
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
         child: new Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             new Expanded(
               child: _buildContentColumnTime(context),
@@ -124,9 +128,6 @@ class TimeLineModelState extends State<TimeModelRow> {
           ],
         ),
       ),
-      onLongPress: () =>
-          widget.listviewItemClickCallBack.onLongPress(widget.model.id),
-      onTap: () => widget.listviewItemClickCallBack.onTap(widget.model.id),
     );
   }
 
@@ -144,7 +145,7 @@ class TimeLineModelState extends State<TimeModelRow> {
         default:
           return new ExactAssetImage('images/black_heart_alone.png');
       }
-    }else{
+    } else {
       switch (widget.locationType) {
         case LocationType.center:
           return new ExactAssetImage('images/heart_center.png');
@@ -158,7 +159,5 @@ class TimeLineModelState extends State<TimeModelRow> {
           return new ExactAssetImage('images/heart_alone.png');
       }
     }
-
-
   }
 }

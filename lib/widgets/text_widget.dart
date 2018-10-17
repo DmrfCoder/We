@@ -15,13 +15,14 @@ class TextWidget extends StatefulWidget {
 
   final EditorCallBack editorCallBack;
 
-  bool autoFoucus=false;
-
+  bool autoFoucus = false;
 
   @override
   State<StatefulWidget> createState() => new _TextWidgetState();
 
-  TextWidget({Key key, this.editBean, this.editorCallBack,this.autoFoucus=false}) : super(key: key);
+  TextWidget(
+      {Key key, this.editBean, this.editorCallBack, this.autoFoucus = false})
+      : super(key: key);
 }
 
 class _TextWidgetState extends State<TextWidget> {
@@ -42,7 +43,7 @@ class _TextWidgetState extends State<TextWidget> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    widget.editBean.content=_contentController.text;
+    widget.editBean.content = _contentController.text;
 
     widget.editorCallBack.updateEditBeanData(
         changeType: ChangeType.update, editBean: widget.editBean);
@@ -53,17 +54,6 @@ class _TextWidgetState extends State<TextWidget> {
   Future<Null> _focusNodelistener() async {
     if (_focusNode.hasFocus) {
       widget.editorCallBack.updateCurIndex(CurEditBean: widget.editBean);
-    } else {
-//      if (_contentController.text.isEmpty) {
-//        widget.editorCallBack.updateEditBeanData(
-//            changeType: ChangeType.delete, editBean: widget.editBean);
-//      } else {
-//        widget.editBean.content = _contentController.text;
-//
-//
-//        widget.editorCallBack.updateEditBeanData(
-//            changeType: ChangeType.update, editBean: widget.editBean);
-//      }
     }
   }
 
@@ -107,8 +97,7 @@ class _TextWidgetState extends State<TextWidget> {
   }
 
   void _textChanged(String value) {
-    widget.editBean.content=value;
-
+    widget.editBean.content = value;
 
     widget.editorCallBack.updateEditBeanData(
         changeType: ChangeType.update, editBean: widget.editBean);

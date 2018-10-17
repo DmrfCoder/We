@@ -39,6 +39,10 @@ class HttpUtil {
         return {"result": true, "user_id": user_id};
       }
     } on DioError catch (e) {
+      if(e.response==null){
+        return {"result": false, "error": "注册失败，请检查您的网络！"};
+      }
+
       return {"result": false, "error": e.response.data["error"]};
     }
     return {"result": false};
@@ -65,6 +69,10 @@ class HttpUtil {
         return {"result": true, "user_id": user_id};
       }
     } on DioError catch (e) {
+      if(e.response==null){
+        return {"result": false, "error": "登陆失败，请检查您的网络！"};
+      }
+
       return {"result": false, "error": e.response.data["error"]};
     }
     return {"result": false};
@@ -91,6 +99,7 @@ class HttpUtil {
         return {"result": true, "url": response.data["url"]};
       }
     } on DioError catch (e) {
+
       return {"result": false, "error": response.data["error"]};
     }
   }

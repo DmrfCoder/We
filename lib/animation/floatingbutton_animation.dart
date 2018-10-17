@@ -22,6 +22,9 @@ class _AnimatedFabState extends State<AnimatedFab>
   final double expandedSize = 180.0;
   final double hiddenSize = 20.0;
 
+
+
+
   @override
   void initState() {
     super.initState();
@@ -41,12 +44,15 @@ class _AnimatedFabState extends State<AnimatedFab>
   Widget build(BuildContext context) {
     List<Widget> child = [];
 
+
     return new SizedBox(
       width: expandedSize,
       height: expandedSize,
       child: new AnimatedBuilder(
         animation: _animationController,
+
         builder: (BuildContext context, Widget child) {
+
           if (_animationController.value > 0.5) {
             return new Stack(
               alignment: Alignment.center,
@@ -122,6 +128,7 @@ class _AnimatedFabState extends State<AnimatedFab>
     double size =
         hiddenSize + (expandedSize - hiddenSize) * _animationController.value;
     return new Container(
+
       height: size,
       width: size,
       decoration: new BoxDecoration(shape: BoxShape.circle, color: Colors.pink),
