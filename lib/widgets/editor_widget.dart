@@ -25,34 +25,39 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> implements EditorCallBack {
-  bool autoFoucus = false;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.list.length == 1 && widget.list[0].content.isEmpty) {
-      autoFoucus = true;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     var children = <Widget>[];
 
-    for (EditBean editbean in widget.list) {
+    bool findFirstText = false;
+    for (int i = widget.list.length - 1; i >= 0; i--) {
+      EditBean editbean = widget.list[i];
+
       if (editbean.isText) {
-        children.add(new TextWidget(
-          editBean: editbean,
-          editorCallBack: this,
-          autoFoucus: autoFoucus,
-        ));
+
+        children.insert(
+            0,
+            new TextWidget(
+              editBean: editbean,
+              editorCallBack: this,
+              autoFoucus: !findFirstText,
+            ));
+
+        if (!findFirstText) {
+          findFirstText = true;
+        }
       } else {
         var image = new ImageWidget(
           editBean: editbean,
           editorCallBack: this,
         );
-        children.add(image);
+        children.insert(0, image);
       }
     }
 

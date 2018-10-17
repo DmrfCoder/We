@@ -92,25 +92,16 @@ class EditorControllor {
   }
 
   dispose() {
-    List<EditBean> removeItems = [];
-
-    for (EditBean editbeanItem in _timelineModel.editbeanList.list) {
+    bool emptyFlag = false;
+    if (_timelineModel.editbeanList.list.length == 1) {
+      EditBean editbeanItem = _timelineModel.editbeanList.list[0];
       if (editbeanItem.isText) {
         if (editbeanItem.content.isEmpty) {
           print('remove empty widget in editor_controllor');
-          removeItems.add(editbeanItem);
+          _timelineModel.editbeanList.list.removeAt(0);
+          emptyFlag = true;
         }
       }
-    }
-
-    for (EditBean editbeanItem in removeItems) {
-      _timelineModel.editbeanList.list.remove(editbeanItem);
-    }
-
-    bool emptyFlag = false;
-
-    if (_timelineModel.getLength() == 0) {
-      emptyFlag = true;
     }
 
     if (_editType == EditType.add) {
