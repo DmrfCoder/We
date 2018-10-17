@@ -15,10 +15,13 @@ class TextWidget extends StatefulWidget {
 
   final EditorCallBack editorCallBack;
 
+  bool autoFoucus=false;
+
+
   @override
   State<StatefulWidget> createState() => new _TextWidgetState();
 
-  TextWidget({Key key, this.editBean, this.editorCallBack}) : super(key: key);
+  TextWidget({Key key, this.editBean, this.editorCallBack,this.autoFoucus=false}) : super(key: key);
 }
 
 class _TextWidgetState extends State<TextWidget> {
@@ -85,6 +88,7 @@ class _TextWidgetState extends State<TextWidget> {
               color: Colors.black87,
             ),
             onChanged: _textChanged,
+            autofocus: widget.autoFoucus,
           ),
           flex: 18,
         ),

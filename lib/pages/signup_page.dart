@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_we/utils/http_util.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -26,23 +25,23 @@ class _SignUpState extends State<SignUpPage> {
     if (_password2Controller.text == '' ||
         _passwordController.text == '' ||
         _passwordController.text == '') {
-      Fluttertoast.showToast(
-          msg: "注册信息填写不完整！",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          bgcolor: "#e74c3c",
-          textcolor: '#ffffff');
+//      Fluttertoast.showToast(
+//          msg: "注册信息填写不完整！",
+//          toastLength: Toast.LENGTH_SHORT,
+//          gravity: ToastGravity.BOTTOM,
+//          timeInSecForIos: 1,
+//          bgcolor: "#e74c3c",
+//          textcolor: '#ffffff');
 
       return;
     } else if (_passwordController.text != _password2Controller.text) {
-      Fluttertoast.showToast(
-          msg: "两次密码不一致！",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          bgcolor: "#e74c3c",
-          textcolor: '#ffffff');
+//      Fluttertoast.showToast(
+//          msg: "两次密码不一致！",
+//          toastLength: Toast.LENGTH_SHORT,
+//          gravity: ToastGravity.BOTTOM,
+//          timeInSecForIos: 1,
+//          bgcolor: "#e74c3c",
+//          textcolor: '#ffffff');
       return;
     }
 
@@ -57,13 +56,13 @@ class _SignUpState extends State<SignUpPage> {
         showProgress = false;
       });
 
-      Fluttertoast.showToast(
-          msg: "注册成功！",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          bgcolor: "#e74c3c",
-          textcolor: '#ffffff');
+//      Fluttertoast.showToast(
+//          msg: "注册成功！",
+//          toastLength: Toast.LENGTH_SHORT,
+//          gravity: ToastGravity.BOTTOM,
+//          timeInSecForIos: 1,
+//          bgcolor: "#e74c3c",
+//          textcolor: '#ffffff');
 
       List<String> onBackInfo = [
         _phoneController.text,
@@ -77,13 +76,13 @@ class _SignUpState extends State<SignUpPage> {
         showProgress = false;
       });
 
-      Fluttertoast.showToast(
-          msg: value["error"] == null ? "注册失败，请检查您的网络！" : value["error"],
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          bgcolor: "#e74c3c",
-          textcolor: '#ffffff');
+//      Fluttertoast.showToast(
+//          msg: value["error"] == null ? "注册失败，请检查您的网络！" : value["error"],
+//          toastLength: Toast.LENGTH_SHORT,
+//          gravity: ToastGravity.BOTTOM,
+//          timeInSecForIos: 1,
+//          bgcolor: "#e74c3c",
+//          textcolor: '#ffffff');
       return;
     }
   }

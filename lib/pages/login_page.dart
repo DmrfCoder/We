@@ -6,9 +6,13 @@ import 'package:flutter_we/pages/signup_page.dart';
 import 'package:flutter_we/pages/we_page.dart';
 import 'package:flutter_we/utils/http_util.dart';
 import 'package:flutter_we/utils/share_preferences_util.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
+  bool autoLogin = true;
+
+
+  LoginPage(this.autoLogin);
+
   @override
   State<StatefulWidget> createState() => new _LoginState();
 }
@@ -57,13 +61,13 @@ class _LoginState extends State<LoginPage> {
         showProgress = false;
       });
 
-      Fluttertoast.showToast(
+      /* Fluttertoast.showToast(
           msg: value["error"] == null ? "登陆失败，请检查您的网络!" : value["error"],
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 1,
           bgcolor: "#e74c3c",
-          textcolor: '#ffffff');
+          textcolor: '#ffffff');*/
 
       return;
     } else {
@@ -71,13 +75,13 @@ class _LoginState extends State<LoginPage> {
         showProgress = false;
       });
 
-      Fluttertoast.showToast(
+      /* Fluttertoast.showToast(
           msg: "登陆成功！",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 1,
           bgcolor: "#e74c3c",
-          textcolor: '#ffffff');
+          textcolor: '#ffffff');*/
 
       navigateToWeListPage(value["user_id"]);
     }
@@ -89,23 +93,23 @@ class _LoginState extends State<LoginPage> {
     FocusScope.of(context).requestFocus(new FocusNode());
     _checkInput();
     if (_phoneController.text == '' || _passwordController.text == '') {
-      Fluttertoast.showToast(
-          msg: "登录信息填写不完整",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          bgcolor: "#e74c3c",
-          textcolor: '#ffffff');
+//      Fluttertoast.showToast(
+//          msg: "登录信息填写不完整",
+//          toastLength: Toast.LENGTH_SHORT,
+//          gravity: ToastGravity.BOTTOM,
+//          timeInSecForIos: 1,
+//          bgcolor: "#e74c3c",
+//          textcolor: '#ffffff');
       check = false;
       return;
     } else if (!_correctPhone || !_correctPassword) {
-      Fluttertoast.showToast(
-          msg: "登录信息的格式不正确",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          bgcolor: "#e74c3c",
-          textcolor: '#ffffff');
+//      Fluttertoast.showToast(
+//          msg: "登录信息的格式不正确",
+//          toastLength: Toast.LENGTH_SHORT,
+//          gravity: ToastGravity.BOTTOM,
+//          timeInSecForIos: 1,
+//          bgcolor: "#e74c3c",
+//          textcolor: '#ffffff');
       check = false;
       return;
     }
@@ -130,6 +134,9 @@ class _LoginState extends State<LoginPage> {
     _phoneController.text = sharePreferenceUtil.getString(PHONE_KEY);
     _passwordController.text = sharePreferenceUtil.getString(PASSWORD_kEY);
 
+    if (!widget.autoLogin) {
+      return;
+    }
     if (_passwordController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
       _login();
@@ -255,7 +262,7 @@ class _LoginState extends State<LoginPage> {
     putSpInfo();
     Navigator.pushAndRemoveUntil(context,
         new MaterialPageRoute(builder: (BuildContext context) {
-      return new WeListPage(userid);
+      return new WeListPage(userid, _phoneController.text);
     }), (route) => route == null);
   }
 

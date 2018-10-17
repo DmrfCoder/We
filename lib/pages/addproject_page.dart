@@ -115,7 +115,10 @@ class AddprojectState extends State<AddProjectPage>
     var c = new Container(
       width: 80.0,
       child: new IconButton(
-          icon: Icon(Icons.picture_in_picture),
+          icon: Icon(
+            Icons.picture_in_picture,
+            color: Colors.pink,
+          ),
           onPressed: () {
             //做选择图片的操作
             captureImage(ImageSource.photos);
@@ -129,29 +132,16 @@ class AddprojectState extends State<AddProjectPage>
     var c = new Container(
       width: 80.0,
       padding: const EdgeInsets.all(8.0),
-      child: new RaisedButton(
-          onPressed: () {
-            OnSave();
-          },
-          color: Colors.blue,
-          //highlightColor: Colors.lightBlueAccent,
-          //disabledColor: Colors.lightBlueAccent,
-          child: new Text(
-            "提交",
-            style: new TextStyle(color: Colors.white),
-          )),
+      child: new IconButton(
+        onPressed: OnSave,
+        icon: Icon(
+          Icons.save,
+          color: Colors.pink,
+        ),
+      ),
     );
 
     return c;
-  }
-
-  Widget _buildImage() {
-    if (_imageFile != null) {
-      return new Image.file(_imageFile);
-    } else {
-      return new Text('Take an image to start',
-          style: new TextStyle(fontSize: 18.0));
-    }
   }
 
   void OnSave() {

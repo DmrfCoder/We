@@ -25,24 +25,29 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> implements EditorCallBack {
+  bool autoFoucus = false;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.list.length == 1 && widget.list[0].content.isEmpty) {
+      autoFoucus = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     var children = <Widget>[];
 
-
-
     for (EditBean editbean in widget.list) {
       if (editbean.isText) {
-
-
         children.add(new TextWidget(
           editBean: editbean,
           editorCallBack: this,
+          autoFoucus: autoFoucus,
         ));
       } else {
-
         var image = new ImageWidget(
           editBean: editbean,
           editorCallBack: this,
@@ -76,12 +81,9 @@ class _EditorState extends State<Editor> implements EditorCallBack {
     }
   }
 
-
   @override
   updateCurIndex({EditBean CurEditBean}) {
     // TODO: implement updateCurIndex
     widget.addProjectPageCallBack.updateCurEditbean(CurEditBean);
   }
-
-
 }

@@ -7,7 +7,6 @@ import 'package:flutter_we/pages/we_page.dart';
 import 'package:flutter_we/utils/db_util.dart';
 import 'package:flutter_we/utils/http_util.dart';
 import 'package:flutter_we/utils/share_preferences_util.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class DbPage extends StatefulWidget {
   @override

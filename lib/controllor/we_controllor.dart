@@ -57,6 +57,7 @@ class WeControllor
 
       if (result["result"] >= 0) {
         timeLineModels = result["timeLineModelList"];
+        weListPageState.updateState(this);
       }
 
       /**

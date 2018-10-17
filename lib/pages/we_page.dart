@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_we/animation/floatingbutton_animation.dart';
 import 'package:flutter_we/beans/constant_bean.dart';
@@ -11,13 +12,15 @@ import 'package:flutter_we/beans/events_bean.dart';
 import 'package:flutter_we/callback/floatingbutton_iconclickcallback_callback.dart';
 import 'package:flutter_we/controllor/we_controllor.dart';
 import 'package:flutter_we/pages/addproject_page.dart';
+import 'package:flutter_we/pages/login_page.dart';
 import 'package:flutter_we/utils/http_util.dart';
 import 'package:flutter_we/widgets/timeline_widget.dart';
 
 class WeListPage extends StatefulWidget {
   String userid;
+  String phoneNumber;
 
-  WeListPage(this.userid);
+  WeListPage(this.userid, this.phoneNumber);
 
   @override
   WeListPageState createState() => new WeListPageState();
@@ -41,7 +44,6 @@ class WeListPageState extends State<WeListPage>
   void dispose() {
     // TODO: implement dispose
 
-
     super.dispose();
   }
 
@@ -64,29 +66,19 @@ class WeListPageState extends State<WeListPage>
                   image: new DecorationImage(
                       image: new NetworkImage(
                           "http://t2.hddhhn.com/uploads/tu/201612/98/st93.png"))),
-              accountName: new Text("demo"),
-              accountEmail: new Text("demo@gmail.com"),
+              accountName: new Text("phone:" + widget.phoneNumber),
+              accountEmail: new Text("userid:" + widget.userid),
             ),
             new Row(
               children: <Widget>[
-                new Container(
-                  padding: EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: new Text("自动备份数据"),
-                ),
-                new Switch(
-                    value: true,
-                    onChanged: (value) {
-                      print(value.toString());
-                    }),
-              ],
-            ),
-            new Row(
-              children: <Widget>[
-                new Container(
-                  padding: EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: new Text("退出登陆"),
+                new GestureDetector(
+                  onTap: () => _logout(),
+                  child: new Container(
+                    padding:
+                        EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: new Text("退出登陆"),
+                  ),
                 ),
               ],
             ),
@@ -112,7 +104,7 @@ class WeListPageState extends State<WeListPage>
               ),
               new Center(
                   child: new Container(
-                padding: EdgeInsets.only(bottom: 40.0),
+                padding: EdgeInsets.only(bottom: 30.0),
                 child: new AnimatedFab(
                   floatButtonIconClickCallBack: this,
                 ),
@@ -148,5 +140,14 @@ class WeListPageState extends State<WeListPage>
     // TODO: implement floatIconOnClick
     startAddProjectPage(
         new TimelineModel(messageType: messageType), EditType.add);
+  }
+
+  _logout() {
+    Navigator.pushAndRemoveUntil(context,
+        new MaterialPageRoute(builder: (BuildContext context) {
+      return new LoginPage(
+        false,
+      );
+    }), (route) => route == null);
   }
 }
