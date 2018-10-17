@@ -18,10 +18,13 @@ class Editor extends StatefulWidget {
 
   final List<EditBean> list;
 
+  final bool needAutoFocus;
+
   @override
   State<StatefulWidget> createState() => new _EditorState();
 
-  Editor({Key key, this.addProjectPageCallBack, this.list}) : super(key: key);
+  Editor({Key key, this.addProjectPageCallBack, this.list, this.needAutoFocus})
+      : super(key: key);
 }
 
 class _EditorState extends State<Editor> implements EditorCallBack {
@@ -35,12 +38,12 @@ class _EditorState extends State<Editor> implements EditorCallBack {
   Widget build(BuildContext context) {
     var children = <Widget>[];
 
-    bool findFirstText = false;
+    bool findFirstText = !widget.needAutoFocus;
+
     for (int i = widget.list.length - 1; i >= 0; i--) {
       EditBean editbean = widget.list[i];
 
       if (editbean.isText) {
-
         children.insert(
             0,
             new TextWidget(

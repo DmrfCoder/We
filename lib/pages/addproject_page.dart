@@ -105,6 +105,7 @@ class AddprojectState extends State<AddProjectPage>
         new Editor(
           addProjectPageCallBack: this,
           list: _editorControllor.getDataList(),
+          needAutoFocus: widget.editType == EditType.add ? true : false,
         ),
       ],
     );
