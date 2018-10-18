@@ -105,12 +105,10 @@ class TimelineComponentState extends State<TimelineComponent>
     }
 
 
-    return new Expanded(
-      child: new ListView(
+    return new ListView(
 
         children: child,
 
-      ),
     );
   }
 

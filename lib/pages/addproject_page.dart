@@ -33,8 +33,7 @@ class AddprojectState extends State<AddProjectPage>
   File _imageFile;
 
   void captureImage(ImageSource captureMode) async {
-    var imageFile =
-        await ImagePicker.pickImage(source: ImageSource.gallery);
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
     _imageFile = imageFile;
 
     if (_imageFile == null) {
@@ -80,6 +79,7 @@ class AddprojectState extends State<AddProjectPage>
     var content = _BuildPage();
 
     return new Scaffold(
+      resizeToAvoidBottomPadding: true,
       appBar: new AppBar(
         title: new Text('we'),
         actions: <Widget>[_BuildInsertPicture(), _BuildSaveButton()],
@@ -87,15 +87,17 @@ class AddprojectState extends State<AddProjectPage>
       body: new Container(
         decoration: new BoxDecoration(
           image: new DecorationImage(
-            image: new ExactAssetImage('images/login_signup_background.jpg'),
+            image: new ExactAssetImage('images/edit_back.png'),
             fit: BoxFit.cover,
           ),
         ),
-        child: content,
+        child: new Editor(
+          addProjectPageCallBack: this,
+          list: _editorControllor.getDataList(),
+          needAutoFocus: widget.editType == EditType.add ? true : false,
+        ),
       ),
-
     );
-
   }
 
   _BuildPage() {

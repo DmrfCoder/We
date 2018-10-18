@@ -72,6 +72,7 @@ class WeListPageState extends State<WeListPage>
     // TODO: implement build
 
     return new Scaffold(
+      resizeToAvoidBottomPadding: false,
       drawer: new Drawer(
         child: new Column(
           children: <Widget>[
@@ -108,22 +109,20 @@ class WeListPageState extends State<WeListPage>
               fit: BoxFit.cover,
             )),
           ),
-          // _buildTimeline(),
-          new Column(
-            children: <Widget>[
-              new TimelineComponent(
-                timelineList: weControllor.timeLineModels,
-                listviewItemClickCallBack: weControllor,
-                lineColor: Colors.black,
-              ),
-              new Center(
-                  child: new Container(
-                child: new AnimatedFab(
-                  floatButtonIconClickCallBack: this,
-                ),
-              )),
-            ],
+
+          new TimelineComponent(
+            timelineList: weControllor.timeLineModels,
+            listviewItemClickCallBack: weControllor,
+            lineColor: Colors.black,
           ),
+          new Center(
+              child: new Container(
+            child: new AnimatedFab(
+              floatButtonIconClickCallBack: this,
+            ),
+          )),
+
+          // _buildTimeline(),
         ],
       ),
     );

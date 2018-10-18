@@ -6,7 +6,7 @@ import 'package:flutter_we/pages/login_page.dart';
 import 'package:flutter_we/pages/we_page.dart';
 
 void main() {
-  debugPaintSizeEnabled = true;
+  debugPaintSizeEnabled = false;
   runApp(new MyApp());
 }
 

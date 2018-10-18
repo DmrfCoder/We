@@ -65,7 +65,7 @@ class _EditorState extends State<Editor> implements EditorCallBack {
     }
 
 
-    return new Column(
+    return new ListView(
       children: children,
     );
   }
