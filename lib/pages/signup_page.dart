@@ -112,6 +112,7 @@ class _SignUpState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      resizeToAvoidBottomPadding: false,
         body: new Stack(children: <Widget>[
       new GestureDetector(
           onTap: () {

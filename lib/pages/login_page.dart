@@ -10,7 +10,6 @@ import 'package:flutter_we/utils/share_preferences_util.dart';
 class LoginPage extends StatefulWidget {
   bool autoLogin = true;
 
-
   LoginPage(this.autoLogin);
 
   @override
@@ -156,6 +155,7 @@ class _LoginState extends State<LoginPage> {
     // TODO: implement build
     return new Scaffold(
         key: _scaffoldKey,
+        resizeToAvoidBottomPadding: false,
         body: new Stack(children: <Widget>[
           new Container(
             decoration: new BoxDecoration(
@@ -163,6 +163,11 @@ class _LoginState extends State<LoginPage> {
               image: new AssetImage("images/login_signup_background.jpg"),
               fit: BoxFit.cover,
             )),
+          ),
+          new GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
           ),
           new Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly, //垂直方向对其方式

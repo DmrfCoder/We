@@ -79,6 +79,7 @@ class _TextWidgetState extends State<TextWidget> {
             ),
             onChanged: _textChanged,
             autofocus: widget.autoFoucus,
+            keyboardType: TextInputType.text,
           ),
           flex: 18,
         ),

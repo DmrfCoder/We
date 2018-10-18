@@ -87,13 +87,15 @@ class AddprojectState extends State<AddProjectPage>
       body: new Container(
         decoration: new BoxDecoration(
           image: new DecorationImage(
-            image: new ExactAssetImage('images/edit_back.png'),
+            image: new ExactAssetImage('images/login_signup_background.jpg'),
             fit: BoxFit.cover,
           ),
         ),
         child: content,
       ),
+
     );
+
   }
 
   _BuildPage() {
