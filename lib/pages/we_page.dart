@@ -115,15 +115,12 @@ class WeListPageState extends State<WeListPage>
             listviewItemClickCallBack: weControllor,
             lineColor: Colors.black,
           ),
-          new Center(
-              child: new Container(
-            child: new AnimatedFab(
-              floatButtonIconClickCallBack: this,
-            ),
-          )),
 
           // _buildTimeline(),
         ],
+      ),
+      floatingActionButton: new AnimatedFab(
+        floatButtonIconClickCallBack: this,
       ),
     );
   }

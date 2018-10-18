@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_we/beans/constant_bean.dart';
 import 'package:flutter_we/beans/edit_bean.dart';
@@ -24,7 +27,12 @@ class ImageWidget extends StatefulWidget {
 }
 
 class ImageWidgetState extends State<ImageWidget> {
+  TextEditingController _imageNoteTextfiledController =
+      new TextEditingController(text: '\n');
+
   var imageByte;
+
+  bool IsNormalMode = true;
 
   Future initFile() async {
     print("initFile");
@@ -47,10 +55,7 @@ class ImageWidgetState extends State<ImageWidget> {
           flex: 1,
         ),
         Expanded(
-          child: new GestureDetector(
-            child: new Image.memory(imageByte),
-            onTap: clickImage,
-          ),
+          child: _buildImage(),
           flex: 8,
         ),
         Expanded(
@@ -59,6 +64,50 @@ class ImageWidgetState extends State<ImageWidget> {
         ),
       ],
     );
+  }
+
+  _buildImage() {
+    if (IsNormalMode) {
+      return new GestureDetector(
+        child: new Container(
+          padding: EdgeInsets.only(top: 10.0,bottom: 10.0),
+            child: new Image.memory(imageByte)),
+        onTap: () {
+          setState(() {
+            IsNormalMode = false;
+          });
+        },
+      );
+    } else {
+      return new Stack(
+        children: <Widget>[
+          new Opacity(
+            opacity: 0.2,
+            child: new Image.memory(imageByte),
+          ),
+          new Row(
+            children: <Widget>[
+              new IconButton(
+                  padding: EdgeInsets.all(0.0),
+                  icon: new Icon(Icons.cancel),
+                  color: Colors.green,
+                  onPressed: () {
+                    setState(() {
+                      IsNormalMode = true;
+                    });
+                  }),
+              new IconButton(
+                  padding: EdgeInsets.all(0.0),
+                  icon: new Icon(Icons.delete),
+                  color: Colors.red,
+                  onPressed: () {
+                    clickImage();
+                  }),
+            ],
+          ),
+        ],
+      );
+    }
   }
 
   void clickImage() {
@@ -83,6 +132,9 @@ class ImageWidgetState extends State<ImageWidget> {
                 child: const Text('取消'),
                 onPressed: () {
                   Navigator.pop(context);
+                  setState(() {
+                    IsNormalMode = true;
+                  });
                 },
               ),
             ],

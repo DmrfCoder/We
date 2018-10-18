@@ -59,6 +59,7 @@ class _TextWidgetState extends State<TextWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     // TODO: implement build
     return new Row(
       children: <Widget>[

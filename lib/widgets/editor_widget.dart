@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_we/beans/constant_bean.dart';
 import 'package:flutter_we/beans/edit_bean.dart';
@@ -12,6 +14,8 @@ import 'package:flutter_we/controllor/editor_controllor.dart';
 import 'package:flutter_we/pages/addproject_page.dart';
 import 'package:flutter_we/widgets/image_widget.dart';
 import 'package:flutter_we/widgets/text_widget.dart';
+
+import 'dart:ui' as ui;
 
 class Editor extends StatefulWidget {
   final AddProjectPageCallBack addProjectPageCallBack;
@@ -63,7 +67,6 @@ class _EditorState extends State<Editor> implements EditorCallBack {
         children.insert(0, image);
       }
     }
-
 
     return new ListView(
       children: children,

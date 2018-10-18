@@ -22,29 +22,33 @@ class EditorControllor {
 
   EditType _editType;
 
+  int _curIndex;
+
+
   EditType get editType => _editType;
 
   getDataList() {
     return _timelineModel.editbeanList.list;
   }
 
-  EditorControllor(this._timeLineModelEditCallBack, this._timelineModel) {
-    _curIndex = 0;
+  EditorControllor(this._timeLineModelEditCallBack, this._timelineModel,this._editType) {
+
     children = <Widget>[];
 
-    _editType = EditType.add;
-  }
 
-  set editType(EditType value) {
-    _editType = value;
     if (_editType == EditType.add) {
       EditBean editBean = new EditBean(_curIndex, true, "");
       _timelineModel.editbeanList.list.add(editBean);
-      //_timeLineModelEditCallBack.updateTimelineModel(_timelineModel);
+      _curIndex=0;
+    }else{
+      _curIndex=_timelineModel.getLength()-1;
     }
+
   }
 
-  int _curIndex;
+
+
+
 
   int get curIndex => _curIndex;
 
