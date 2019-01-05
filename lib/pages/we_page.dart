@@ -212,6 +212,7 @@ class WeListPageState extends State<WeListPage>
   }
 
   Future<Null> _refresh() async {
+    weControllor.initOther();
     weControllor.init();
     print("refresh");
     return;

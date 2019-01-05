@@ -46,7 +46,7 @@ class WeControllor
     return null;
   }
 
-  _initOther() async {
+  initOther() async {
     var inquireValue = await MarryUtil.Inquire(userId: userid);
     isMarried = inquireValue['isMarried'];
     var otherValue =
@@ -60,7 +60,7 @@ class WeControllor
 
   WeControllor(this.weListPageState) {
     userid = weListPageState.widget.userid;
-    _initOther();
+    initOther();
     //jpushUtil = new JpushUtil();
   }
 
