@@ -111,7 +111,6 @@ class AddprojectState extends State<AddProjectPage>
     return new Scaffold(
       resizeToAvoidBottomPadding: true,
       appBar: new AppBar(
-        title: new Text('we'),
         actions: <Widget>[_BuildInsertPicture(), _BuildSaveButton()],
       ),
       body: new RepaintBoundary(

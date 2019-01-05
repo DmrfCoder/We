@@ -40,6 +40,11 @@ dependencies:
 
 
 
+
+
+
+
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -49,6 +54,7 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^0.10.0
   json_serializable: ^1.0.0
+
 
 
 # For information on the generic Dart part of this file, see the
@@ -77,6 +83,10 @@ flutter:
   - images/black_heart_bottom.png
   - images/save.png
   - images/picture.png
+  - images/other_alone.png
+  - images/other_bottom.png
+  - images/other_center.png
+  - images/other_top.png
 
 
 

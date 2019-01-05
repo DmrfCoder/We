@@ -82,7 +82,7 @@ class _LoginState extends State<LoginPage> {
           bgcolor: "#e74c3c",
           textcolor: '#ffffff');*/
 
-      navigateToWeListPage(value["user_id"]);
+      navigateToWeListPage(value["user_id"], value["sessionToken"]);
     }
   }
 
@@ -263,11 +263,11 @@ class _LoginState extends State<LoginPage> {
     sharePreferenceUtil.putString(PASSWORD_kEY, _passwordController.text);
   }
 
-  navigateToWeListPage(String userid) {
+  navigateToWeListPage(String userid, String sessionToken) {
     putSpInfo();
     Navigator.pushAndRemoveUntil(context,
         new MaterialPageRoute(builder: (BuildContext context) {
-      return new WeListPage(userid, _phoneController.text);
+      return new WeListPage(userid, _phoneController.text, sessionToken);
     }), (route) => route == null);
   }
 

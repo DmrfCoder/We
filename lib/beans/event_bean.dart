@@ -16,6 +16,8 @@ class TimelineModel {
 
   MessageType messageType;
 
+  bool isOther=false;
+
   getLength() {
     return editbeanList.list.length;
   }

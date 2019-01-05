@@ -12,15 +12,19 @@ import 'package:flutter_we/beans/events_bean.dart';
 import 'package:flutter_we/callback/floatingbutton_iconclickcallback_callback.dart';
 import 'package:flutter_we/controllor/we_controllor.dart';
 import 'package:flutter_we/pages/addproject_page.dart';
+import 'package:flutter_we/pages/associate_page.dart';
 import 'package:flutter_we/pages/login_page.dart';
+import 'package:flutter_we/pages/message_page.dart';
 import 'package:flutter_we/utils/http_util.dart';
+import 'package:flutter_we/utils/marry_util.dart';
 import 'package:flutter_we/widgets/timeline_widget.dart';
 
 class WeListPage extends StatefulWidget {
   String userid;
   String phoneNumber;
+  String sessionToken;
 
-  WeListPage(this.userid, this.phoneNumber);
+  WeListPage(this.userid, this.phoneNumber, this.sessionToken);
 
   @override
   WeListPageState createState() => new WeListPageState();
@@ -74,50 +78,90 @@ class WeListPageState extends State<WeListPage>
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       drawer: new Drawer(
-        child: new Column(
+        child: new Stack(
           children: <Widget>[
-            new UserAccountsDrawerHeader(
+            new Container(
               decoration: new BoxDecoration(
                   image: new DecorationImage(
-                      image: new NetworkImage(
-                          "http://t2.hddhhn.com/uploads/tu/201612/98/st93.png"))),
-              accountName: new Text("phone:" + widget.phoneNumber),
-              accountEmail: new Text("userid:" + widget.userid),
+                image: new AssetImage("images/login_signup_background.jpg"),
+                fit: BoxFit.cover,
+              )),
             ),
-            new Row(
+            new Column(
               children: <Widget>[
-                new GestureDetector(
-                  onTap: () => _logout(),
-                  child: new Container(
-                    padding:
-                        EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: new Text("退出登陆"),
-                  ),
+                new UserAccountsDrawerHeader(
+                  decoration: new BoxDecoration(
+                      image: new DecorationImage(
+                          image: new NetworkImage(
+                              "http://t2.hddhhn.com/uploads/tu/201612/98/st93.png"))),
+                  accountName: new Text("phone:" + widget.phoneNumber),
+                  accountEmail: new Text("userid:" + widget.userid),
+                ),
+                new Row(
+                  children: <Widget>[
+                    new GestureDetector(
+                      onTap: () => _associate(),
+                      child: new Container(
+                        padding: EdgeInsets.only(
+                            left: 10.0, top: 10.0, bottom: 10.0),
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: new Text("账号关联"),
+                      ),
+                    ),
+                  ],
+                ),
+                new Row(
+                  children: <Widget>[
+                    new GestureDetector(
+                      onTap: () => _message(),
+                      child: new Container(
+                        padding: EdgeInsets.only(
+                            left: 10.0, top: 10.0, bottom: 10.0),
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: new Text("消息"),
+                      ),
+                    ),
+                  ],
+                ),
+                new Row(
+                  children: <Widget>[
+                    new GestureDetector(
+                      onTap: () => _logout(),
+                      child: new Container(
+                        padding: EdgeInsets.only(
+                            left: 10.0, top: 10.0, bottom: 10.0),
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: new Text("退出登陆"),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
         ),
       ),
-      body: new Stack(
-        children: <Widget>[
-          new Container(
-            decoration: new BoxDecoration(
-                image: new DecorationImage(
-              image: new AssetImage("images/login_signup_background.jpg"),
-              fit: BoxFit.cover,
-            )),
-          ),
+      body: new RefreshIndicator(
+        child: new Stack(
+          children: <Widget>[
+            new Container(
+              decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                image: new AssetImage("images/login_signup_background.jpg"),
+                fit: BoxFit.cover,
+              )),
+            ),
 
-          new TimelineComponent(
-            timelineList: weControllor.timeLineModels,
-            listviewItemClickCallBack: weControllor,
-            lineColor: Colors.black,
-          ),
+            new TimelineComponent(
+              timelineList: weControllor.timeLineModels,
+              listviewItemClickCallBack: weControllor,
+              lineColor: Colors.black,
+            ),
 
-          // _buildTimeline(),
-        ],
+            // _buildTimeline(),
+          ],
+        ),
+        onRefresh: _refresh,
       ),
       floatingActionButton: new AnimatedFab(
         floatButtonIconClickCallBack: this,
@@ -146,5 +190,30 @@ class WeListPageState extends State<WeListPage>
         false,
       );
     }), (route) => route == null);
+  }
+
+  _associate() {
+//    MarryUtil.addWaitMarrayUser(
+//        myUserId: "00550567ea",
+//        otherUserId: "d03745ca20",
+//        sessionToken: widget.sessionToken);
+
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (BuildContext context) {
+      return new AssociatePage(widget.userid, weControllor);
+    }));
+  }
+
+  _message() {
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (BuildContext context) {
+      return new MessagePage();
+    }));
+  }
+
+  Future<Null> _refresh() async {
+    weControllor.init();
+    print("refresh");
+    return;
   }
 }

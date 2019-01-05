@@ -37,9 +37,10 @@ class EditorControllor {
 
 
     if (_editType == EditType.add) {
+      _curIndex=0;
       EditBean editBean = new EditBean(_curIndex, true, "");
       _timelineModel.editbeanList.list.add(editBean);
-      _curIndex=0;
+
     }else{
       _curIndex=_timelineModel.getLength()-1;
     }
@@ -81,7 +82,9 @@ class EditorControllor {
   }
 
   updateEditbean(EditBean editbean) {
+
     int index = editbean.index;
+
     if (index < 0 || index >= _timelineModel.getLength()) {
       return false;
     } else {

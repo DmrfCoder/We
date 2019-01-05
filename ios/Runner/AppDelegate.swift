@@ -10,6 +10,7 @@ import Flutter
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?
   ) -> Bool {
+    
     GeneratedPluginRegistrant.register(with: self)
     
     guard let controller = window.rootViewController as? FlutterViewController else {
@@ -18,6 +19,7 @@ import Flutter
     flutterChannelManager = FlutterChannelManager(flutterViewController: controller)
     flutterChannelManager.setup()
     
+   
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

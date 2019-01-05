@@ -96,8 +96,8 @@ class TimeLineModelState extends State<TimeModelRow> {
     center_x = MediaQuery.of(context).size.width / 2;
     // TODO: implement build
     return new InkWell(
-      onTap:()=> widget.listviewItemClickCallBack.onTap(widget.model.id),
-      onLongPress:()=>
+      onTap: () => widget.listviewItemClickCallBack.onTap(widget.model.id),
+      onLongPress: () =>
           widget.listviewItemClickCallBack.onLongPress(widget.model.id),
       child: new Container(
         height: 80.0,
@@ -132,31 +132,46 @@ class TimeLineModelState extends State<TimeModelRow> {
   }
 
   getPositionImage() {
-    if (widget.model.messageType == MessageType.bad) {
+    if (widget.model.isOther) {
       switch (widget.locationType) {
         case LocationType.center:
-          return new ExactAssetImage('images/black_heart_center.png');
+          return new ExactAssetImage('images/other_center.png');
         case LocationType.alone:
-          return new ExactAssetImage('images/black_heart_alone.png');
+          return new ExactAssetImage('images/other_alone.png');
         case LocationType.bottom:
-          return new ExactAssetImage('images/black_heart_bottom.png');
+          return new ExactAssetImage('images/other_bottom.png');
         case LocationType.top:
-          return new ExactAssetImage('images/black_heart_top.png');
+          return new ExactAssetImage('images/other_top.png');
         default:
-          return new ExactAssetImage('images/black_heart_alone.png');
+          return new ExactAssetImage('images/other_alone.png');
       }
     } else {
-      switch (widget.locationType) {
-        case LocationType.center:
-          return new ExactAssetImage('images/heart_center.png');
-        case LocationType.alone:
-          return new ExactAssetImage('images/heart_alone.png');
-        case LocationType.bottom:
-          return new ExactAssetImage('images/heart_bottom.png');
-        case LocationType.top:
-          return new ExactAssetImage('images/heart_top.png');
-        default:
-          return new ExactAssetImage('images/heart_alone.png');
+      if (widget.model.messageType == MessageType.bad) {
+        switch (widget.locationType) {
+          case LocationType.center:
+            return new ExactAssetImage('images/black_heart_center.png');
+          case LocationType.alone:
+            return new ExactAssetImage('images/black_heart_alone.png');
+          case LocationType.bottom:
+            return new ExactAssetImage('images/black_heart_bottom.png');
+          case LocationType.top:
+            return new ExactAssetImage('images/black_heart_top.png');
+          default:
+            return new ExactAssetImage('images/black_heart_alone.png');
+        }
+      } else {
+        switch (widget.locationType) {
+          case LocationType.center:
+            return new ExactAssetImage('images/heart_center.png');
+          case LocationType.alone:
+            return new ExactAssetImage('images/heart_alone.png');
+          case LocationType.bottom:
+            return new ExactAssetImage('images/heart_bottom.png');
+          case LocationType.top:
+            return new ExactAssetImage('images/heart_top.png');
+          default:
+            return new ExactAssetImage('images/heart_alone.png');
+        }
       }
     }
   }

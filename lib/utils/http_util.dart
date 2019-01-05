@@ -3,10 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:dio/dio.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_we/beans/constant_bean.dart' as GlogbalBean;
+import 'package:flutter_we/beans/constant_bean.dart' as GlobalBean;
 import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/edit_list_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
@@ -22,10 +20,8 @@ class HttpUtil {
     Response response;
 
     dio.options.contentType = ContentType.json;
-    dio.options.headers["X-Bmob-Application-Id"] =
-        "2b3b0a7931e05ebe9c91ea8163d06bdf";
-    dio.options.headers["X-Bmob-REST-API-Key"] =
-        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["X-Bmob-Application-Id"] = GlobalBean.bmobApplicationId;
+    dio.options.headers["X-Bmob-REST-API-Key"] = GlobalBean.bmobRestApiKey;
     dio.options.headers["Content-Type"] = "application/json";
 
     try {
@@ -39,7 +35,7 @@ class HttpUtil {
         return {"result": true, "user_id": user_id};
       }
     } on DioError catch (e) {
-      if(e.response==null){
+      if (e.response == null) {
         return {"result": false, "error": "注册失败，请检查您的网络！"};
       }
 
@@ -56,20 +52,24 @@ class HttpUtil {
 
     Response response;
 
-    dio.options.headers["X-Bmob-Application-Id"] =
-        "2b3b0a7931e05ebe9c91ea8163d06bdf";
-    dio.options.headers["X-Bmob-REST-API-Key"] =
-        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["X-Bmob-Application-Id"] = GlobalBean.bmobApplicationId;
+    dio.options.headers["X-Bmob-REST-API-Key"] = GlobalBean.bmobRestApiKey;
 
     try {
       response = await dio.get(url, data: content);
       if (response.statusCode == 200) {
         String user_id = response.data["objectId"];
+        String sessionToken = response.data['sessionToken'];
+        print(response.data);
 
-        return {"result": true, "user_id": user_id};
+        return {
+          "result": true,
+          "user_id": user_id,
+          "sessionToken": sessionToken
+        };
       }
     } on DioError catch (e) {
-      if(e.response==null){
+      if (e.response == null) {
         return {"result": false, "error": "登陆失败，请检查您的网络！"};
       }
 
@@ -86,10 +86,8 @@ class HttpUtil {
     Response response;
 
     dio.options.contentType = ContentType.text;
-    dio.options.headers["X-Bmob-Application-Id"] =
-        "2b3b0a7931e05ebe9c91ea8163d06bdf";
-    dio.options.headers["X-Bmob-REST-API-Key"] =
-        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["X-Bmob-Application-Id"] = GlobalBean.bmobApplicationId;
+    dio.options.headers["X-Bmob-REST-API-Key"] = GlobalBean.bmobRestApiKey;
     dio.options.headers["Content-Type"] = "text/plain";
 
     try {
@@ -99,7 +97,6 @@ class HttpUtil {
         return {"result": true, "url": response.data["url"]};
       }
     } on DioError catch (e) {
-
       return {"result": false, "error": response.data["error"]};
     }
   }
@@ -109,10 +106,11 @@ class HttpUtil {
 
     var content = {
       "messageType":
-          timelineModel.messageType == GlogbalBean.MessageType.nice ? 0 : 1,
+          timelineModel.messageType == GlobalBean.MessageType.nice ? 0 : 1,
       "isDeleted": false,
       "createdTime": timelineModel.time,
-      "content": json.encode(timelineModel.editbeanList)
+      "content": json.encode(timelineModel.editbeanList),
+      "userId": userId
     };
 
     var dio = new Dio();
@@ -124,10 +122,8 @@ class HttpUtil {
 
     dio.options.contentType = ContentType.json;
 
-    dio.options.headers["X-Bmob-Application-Id"] =
-        "2b3b0a7931e05ebe9c91ea8163d06bdf";
-    dio.options.headers["X-Bmob-REST-API-Key"] =
-        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["X-Bmob-Application-Id"] = GlobalBean.bmobApplicationId;
+    dio.options.headers["X-Bmob-REST-API-Key"] = GlobalBean.bmobRestApiKey;
     dio.options.headers["Content-Type"] = "application/json";
 
     try {
@@ -142,7 +138,7 @@ class HttpUtil {
       }
     } on DioError catch (e) {
       print(e.response.data["error"]);
-    }catch (e){
+    } catch (e) {
       print(e.toString());
     }
 
@@ -167,10 +163,8 @@ class HttpUtil {
 
     dio.options.contentType = ContentType.json;
 
-    dio.options.headers["X-Bmob-Application-Id"] =
-        "2b3b0a7931e05ebe9c91ea8163d06bdf";
-    dio.options.headers["X-Bmob-REST-API-Key"] =
-        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["X-Bmob-Application-Id"] = GlobalBean.bmobApplicationId;
+    dio.options.headers["X-Bmob-REST-API-Key"] = GlobalBean.bmobRestApiKey;
     dio.options.headers["Content-Type"] = "application/json";
 
     try {
@@ -200,10 +194,8 @@ class HttpUtil {
     };
 
     Response response;
-    dio.options.headers["X-Bmob-Application-Id"] =
-        "2b3b0a7931e05ebe9c91ea8163d06bdf";
-    dio.options.headers["X-Bmob-REST-API-Key"] =
-        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["X-Bmob-Application-Id"] = GlobalBean.bmobApplicationId;
+    dio.options.headers["X-Bmob-REST-API-Key"] = GlobalBean.bmobRestApiKey;
     dio.options.headers["Content-Type"] = "application/json";
 
     String d = '{"userId":"$userId","isDeleted":false}';
@@ -240,6 +232,8 @@ class HttpUtil {
           timelineModelList.add(timelineModel);
         }
 
+        print(timelineModelList.length);
+
         return {"result": true, "timelineModelList": timelineModelList};
       } else {
         print("update error");
@@ -271,10 +265,8 @@ class HttpUtil {
 
     dio.options.contentType = ContentType.json;
 
-    dio.options.headers["X-Bmob-Application-Id"] =
-        "2b3b0a7931e05ebe9c91ea8163d06bdf";
-    dio.options.headers["X-Bmob-REST-API-Key"] =
-        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["X-Bmob-Application-Id"] = GlobalBean.bmobApplicationId;
+    dio.options.headers["X-Bmob-REST-API-Key"] = GlobalBean.bmobRestApiKey;
     dio.options.headers["Content-Type"] = "application/json";
 
     try {
@@ -310,10 +302,8 @@ class HttpUtil {
 
     dio.options.contentType = ContentType.json;
 
-    dio.options.headers["X-Bmob-Application-Id"] =
-        "2b3b0a7931e05ebe9c91ea8163d06bdf";
-    dio.options.headers["X-Bmob-REST-API-Key"] =
-        "9b8adb6074b122558d490c9807a6d903";
+    dio.options.headers["X-Bmob-Application-Id"] = GlobalBean.bmobApplicationId;
+    dio.options.headers["X-Bmob-REST-API-Key"] = GlobalBean.bmobRestApiKey;
     dio.options.headers["Content-Type"] = "application/json";
 
     try {

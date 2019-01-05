@@ -10,21 +10,31 @@ import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/beans/events_bean.dart';
 import 'package:flutter_we/callback/listview_item_click_callback.dart';
 import 'package:flutter_we/callback/timelinemodeledit_callback.dart';
+import 'package:flutter_we/controllor/associate_callback.dart';
 import 'package:flutter_we/pages/addproject_page.dart';
 import 'package:flutter_we/pages/we_page.dart';
 import 'package:flutter_we/utils/db_util.dart';
 import 'package:flutter_we/utils/http_util.dart';
+import 'package:flutter_we/utils/marry_util.dart';
+//import 'package:flutter_we/utils/jpush_util.dart';
 
 class WeControllor
-    implements ListviewItemClickCallBack, TimeLineModelEditCallBack {
+    implements
+        ListviewItemClickCallBack,
+        TimeLineModelEditCallBack,
+        AssociateCallBack {
   WeListPageState weListPageState;
 
   List<TimelineModel> timeLineModels = [];
 
   String userid;
+  String otherId = "";
+  bool isMarried = false;
 
   bool hasDownLoadData = false;
-  bool needNetWork = false;
+  bool needNetWork = true;
+
+  //JpushUtil jpushUtil;
 
   getIdModel(String id) {
     for (TimelineModel item in timeLineModels) {
@@ -36,19 +46,59 @@ class WeControllor
     return null;
   }
 
+  _initOther() async {
+    var inquireValue = await MarryUtil.Inquire(userId: userid);
+    isMarried = inquireValue['isMarried'];
+    var otherValue =
+        await MarryUtil.getUserIdByUserName(inquireValue['MarriedUser']);
+    otherId = otherValue as String;
+    print("init Other:");
+    print(isMarried);
+    print(otherId);
+    init();
+  }
+
   WeControllor(this.weListPageState) {
     userid = weListPageState.widget.userid;
+    _initOther();
+    //jpushUtil = new JpushUtil();
   }
 
   init() async {
+    timeLineModels.clear();
     if (userid.isNotEmpty && needNetWork) {
+      if (isMarried) {
+        print("isMarried");
+
+        if (otherId != "") {
+          var otherValue = await HttpUtil.downloadData(otherId);
+
+          if (otherValue["result"]) {
+            List<TimelineModel> otherTimeLineModels =
+                otherValue["timelineModelList"];
+
+            for (TimelineModel model in otherTimeLineModels) {
+              model.isOther = true;
+              timeLineModels.add(model);
+            }
+          }
+        }
+      }
+
       var value = await HttpUtil.downloadData(userid);
 
       if (value["result"]) {
-        timeLineModels = value["timelineModelList"];
-        hasDownLoadData = true;
-        weListPageState.updateState(this);
+        List<TimelineModel> mytimeLineModels = value["timelineModelList"];
+
+        for (TimelineModel model in mytimeLineModels) {
+          timeLineModels.add(model);
+        }
       }
+
+      timeLineModels.sort(_compare);
+
+      weListPageState.updateState(this);
+      hasDownLoadData = true;
     }
 
     if (!hasDownLoadData) {
@@ -64,6 +114,17 @@ class WeControllor
        * 从数据库中读取数据，将数据恢复到timeLineModels中
        */
 
+    }
+  }
+
+  int _compare(TimelineModel a, TimelineModel b) {
+    DateTime aTime = DateTime.parse(a.time);
+    DateTime bTime = DateTime.parse(b.time);
+
+    if (aTime.isAfter(bTime)) {
+      return 0;
+    } else {
+      return 1;
     }
   }
 
@@ -185,5 +246,13 @@ class WeControllor
     int result = await DbUtil.updateDataDb(
         userid, int.parse(timelineModel.id), timelineModel.editbeanList);
     print("update result:" + result.toString());
+  }
+
+  @override
+  associateSuccess(String userName) async {
+    // TODO: implement associateSuccess
+    otherId = await MarryUtil.getUserIdByUserName(userName);
+    isMarried = true;
+    init();
   }
 }
