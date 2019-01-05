@@ -15,6 +15,7 @@ import 'package:flutter_we/pages/addproject_page.dart';
 import 'package:flutter_we/pages/associate_page.dart';
 import 'package:flutter_we/pages/login_page.dart';
 import 'package:flutter_we/pages/message_page.dart';
+import 'package:flutter_we/pages/todo_work_page.dart';
 import 'package:flutter_we/utils/http_util.dart';
 import 'package:flutter_we/utils/marry_util.dart';
 import 'package:flutter_we/widgets/timeline_widget.dart';
@@ -126,6 +127,19 @@ class WeListPageState extends State<WeListPage>
                 new Row(
                   children: <Widget>[
                     new GestureDetector(
+                      onTap: () => _todoWork(),
+                      child: new Container(
+                        padding: EdgeInsets.only(
+                            left: 10.0, top: 10.0, bottom: 10.0),
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: new Text("备忘录"),
+                      ),
+                    ),
+                  ],
+                ),
+                new Row(
+                  children: <Widget>[
+                    new GestureDetector(
                       onTap: () => _logout(),
                       child: new Container(
                         padding: EdgeInsets.only(
@@ -216,5 +230,12 @@ class WeListPageState extends State<WeListPage>
     weControllor.init();
     print("refresh");
     return;
+  }
+
+  _todoWork() {
+    Navigator.push(context,
+        new MaterialPageRoute(builder: (BuildContext context) {
+      return new ToDoWorkPage(widget.userid);
+    }));
   }
 }

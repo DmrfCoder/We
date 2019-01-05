@@ -8,6 +8,7 @@ import 'package:flutter_we/beans/constant_bean.dart' as GlobalBean;
 import 'package:flutter_we/beans/edit_bean.dart';
 import 'package:flutter_we/beans/edit_list_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
+import 'package:flutter_we/beans/todo_work_bean.dart';
 
 class HttpUtil {
   //注册
@@ -312,6 +313,106 @@ class HttpUtil {
       if (response.statusCode == 200) {
         print("update suucess");
         return {"result": true};
+      } else {
+        print("update error");
+      }
+    } on DioError catch (e) {
+      print(e.response.data["error"]);
+    }
+
+    return {"result": false};
+  }
+
+  static uploadToDoWork({ToDoWorkBean todoWorkbean}) async {
+    String url = "https://api2.bmob.cn/1/classes/ToDoWorkData";
+
+    var content = {
+      "year": todoWorkbean.year,
+      "month": todoWorkbean.month,
+      "day": todoWorkbean.day,
+      "content": todoWorkbean.content,
+      "userId": todoWorkbean.userId
+    };
+
+    var dio = new Dio();
+    dio.interceptor.response.onError = (DioError error) {
+      print("error：" + error.toString());
+    };
+
+    Response response;
+
+    dio.options.contentType = ContentType.json;
+
+    dio.options.headers["X-Bmob-Application-Id"] = GlobalBean.bmobApplicationId;
+    dio.options.headers["X-Bmob-REST-API-Key"] = GlobalBean.bmobRestApiKey;
+    dio.options.headers["Content-Type"] = "application/json";
+
+    try {
+      response = await dio.post(url, data: content);
+
+      if (response.statusCode == 201) {
+        String object_id = response.data["objectId"];
+        return {"result": true, "object_id": object_id};
+      } else {
+        print(response.data);
+        print(response.statusCode.toString());
+      }
+    } on DioError catch (e) {
+      print(e.response.data["error"]);
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return {"result": false};
+  }
+
+  static downloadToDoWork(String userId) async {
+    String key = "objectId";
+
+    String url = "https://api2.bmob.cn/1/classes/ToDoWorkData";
+
+    var dio = new Dio();
+    dio.interceptor.response.onError = (DioError error) {
+      print("error：" + error.toString());
+    };
+
+    Response response;
+    dio.options.headers["X-Bmob-Application-Id"] = GlobalBean.bmobApplicationId;
+    dio.options.headers["X-Bmob-REST-API-Key"] = GlobalBean.bmobRestApiKey;
+    dio.options.headers["Content-Type"] = "application/json";
+
+    String d = '{"userId":"$userId"}';
+
+    var content = {"keys": "year,month,day,content"};
+
+    url = url + "?where=" + d;
+
+    print(url);
+
+    try {
+      response = await dio.get(url, data: content);
+
+      if (response.statusCode == 200) {
+        String result = response.data["results"].toString();
+
+        List list = response.data["results"];
+
+        List<ToDoWorkBean> todoWorkBeans = [];
+
+        for (Map value in list) {
+          int year = value['year'];
+          int month = value['month'];
+          int day = value['day'];
+          String content = value['content'];
+
+          ToDoWorkBean toDoWorkBean =
+              new ToDoWorkBean(year, month, day, content, userId);
+          todoWorkBeans.add(toDoWorkBean);
+        }
+
+        print(todoWorkBeans.length);
+
+        return {"result": true, "todoWorkBeans": todoWorkBeans};
       } else {
         print("update error");
       }

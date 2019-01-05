@@ -136,9 +136,15 @@ class MarryUtil {
 
     try {
       response = await dio.get(url);
-      String a=response.data["results"].toString();
-      List list = response.data["results"];
-     return list[0]['objectId'];
+      String a = response.data["results"].toString();
+      try {
+        List list = response.data["results"];
+        print("getUserIdByUserName:");
+        print(response.data);
+        return list[0]['objectId'];
+      } catch (e) {
+        return "false";
+      }
 
     } on DioError catch (e) {
       print(e.response.data["error"]);

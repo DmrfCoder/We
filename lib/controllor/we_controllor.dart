@@ -51,11 +51,13 @@ class WeControllor
     isMarried = inquireValue['isMarried'];
     var otherValue =
         await MarryUtil.getUserIdByUserName(inquireValue['MarriedUser']);
-    otherId = otherValue as String;
-    print("init Other:");
-    print(isMarried);
-    print(otherId);
-    init();
+    if ("false" != otherValue) {
+      otherId = otherValue as String;
+      print("init Other:");
+      print(isMarried);
+      print(otherId);
+      init();
+    }
   }
 
   WeControllor(this.weListPageState) {
@@ -251,8 +253,11 @@ class WeControllor
   @override
   associateSuccess(String userName) async {
     // TODO: implement associateSuccess
+
     otherId = await MarryUtil.getUserIdByUserName(userName);
-    isMarried = true;
-    init();
+    if (otherId != "false") {
+      isMarried = true;
+      init();
+    }
   }
 }

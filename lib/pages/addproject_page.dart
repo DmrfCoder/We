@@ -18,6 +18,8 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:ui' as ui;
 
+import 'package:path_provider/path_provider.dart';
+
 class AddProjectPage extends StatefulWidget {
   TimelineModel timelineModel;
 
@@ -59,16 +61,36 @@ class AddprojectState extends State<AddProjectPage>
       print('inside');
       RenderRepaintBoundary boundary =
           _globalKey.currentContext.findRenderObject();
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      ui.Image image = await boundary.toImage();
       ByteData byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       var pngBytes = byteData.buffer.asUint8List();
+
+      _saveImage(pngBytes, widget.timelineModel.id);
+
       // var bs64 = base64Encode(pngBytes);
 
       _navigateToExportMessagePage(pngBytes);
     } catch (e) {
       print(e);
     }
+  }
+
+  void _saveImage(Uint8List uint8List, String fileName) async {
+    Directory tempDir = await getApplicationDocumentsDirectory();
+
+    bool isDirExist = await Directory(tempDir.path + "/we").exists();
+
+    if (!isDirExist) Directory(tempDir.path + "/we").create();
+
+    bool isDirExist2 =
+        await File(tempDir.path + "/we/" + fileName + ".png").exists();
+
+    if (!isDirExist2) File(tempDir.path + "/we/" + fileName + ".png").create();
+
+    File(tempDir.path + "/we/" + fileName + ".png").writeAsBytes(uint8List);
+
+    print(tempDir.path + "/we/" + fileName + ".png");
   }
 
   _navigateToExportMessagePage(Uint8List imagebytes) {
@@ -111,7 +133,11 @@ class AddprojectState extends State<AddProjectPage>
     return new Scaffold(
       resizeToAvoidBottomPadding: true,
       appBar: new AppBar(
-        actions: <Widget>[_BuildInsertPicture(), _BuildSaveButton()],
+        actions: <Widget>[
+          _BuildSharePicture(),
+          _BuildInsertPicture(),
+          _BuildSaveButton()
+        ],
       ),
       body: new RepaintBoundary(
         key: _globalKey,
@@ -119,7 +145,7 @@ class AddprojectState extends State<AddProjectPage>
           decoration: new BoxDecoration(
             image: new DecorationImage(
               image: new ExactAssetImage('images/edit_back.png'),
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
             ),
           ),
           child: new Editor(
@@ -142,6 +168,23 @@ class AddprojectState extends State<AddProjectPage>
         ),
       ],
     );
+    return c;
+  }
+
+  _BuildSharePicture() {
+    var c = new Container(
+      width: 80.0,
+      child: new IconButton(
+          icon: Icon(
+            Icons.share,
+            color: Colors.pink,
+          ),
+          onPressed: () {
+            //做选择图片的操作
+            _capturePng();
+          }),
+    );
+
     return c;
   }
 
