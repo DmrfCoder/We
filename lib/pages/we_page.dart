@@ -24,6 +24,7 @@ class WeListPage extends StatefulWidget {
   String userid;
   String phoneNumber;
   String sessionToken;
+  WeControllor weControllor;
 
   WeListPage(this.userid, this.phoneNumber, this.sessionToken);
 
@@ -32,17 +33,19 @@ class WeListPage extends StatefulWidget {
 }
 
 class WeListPageState extends State<WeListPage>
+    with AutomaticKeepAliveClientMixin
     implements FloatButtonIconClickCallBack {
-  WeControllor weControllor;
+
 
   //可以在该方法中初始化数据
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    weControllor = new WeControllor(this);
-    weControllor.init();
+    print("we init--------");
+    if (widget.weControllor == null) {
+      widget.weControllor = new WeControllor(this);
+    }
   }
 
   @override
@@ -54,7 +57,7 @@ class WeListPageState extends State<WeListPage>
 
   updateState(WeControllor state) {
     setState(() {
-      weControllor = state;
+      widget.weControllor = state;
     });
   }
 
@@ -78,83 +81,7 @@ class WeListPageState extends State<WeListPage>
 
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
-      drawer: new Drawer(
-        child: new Stack(
-          children: <Widget>[
-            new Container(
-              decoration: new BoxDecoration(
-                  image: new DecorationImage(
-                image: new AssetImage("images/login_signup_background.jpg"),
-                fit: BoxFit.cover,
-              )),
-            ),
-            new Column(
-              children: <Widget>[
-                new UserAccountsDrawerHeader(
-                  decoration: new BoxDecoration(
-                      image: new DecorationImage(
-                          image: new NetworkImage(
-                              "http://t2.hddhhn.com/uploads/tu/201612/98/st93.png"))),
-                  accountName: new Text("phone:" + widget.phoneNumber),
-                  accountEmail: new Text("userid:" + widget.userid),
-                ),
-                new Row(
-                  children: <Widget>[
-                    new GestureDetector(
-                      onTap: () => _associate(),
-                      child: new Container(
-                        padding: EdgeInsets.only(
-                            left: 10.0, top: 10.0, bottom: 10.0),
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: new Text("账号关联"),
-                      ),
-                    ),
-                  ],
-                ),
-                new Row(
-                  children: <Widget>[
-                    new GestureDetector(
-                      onTap: () => _message(),
-                      child: new Container(
-                        padding: EdgeInsets.only(
-                            left: 10.0, top: 10.0, bottom: 10.0),
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: new Text("消息"),
-                      ),
-                    ),
-                  ],
-                ),
-                new Row(
-                  children: <Widget>[
-                    new GestureDetector(
-                      onTap: () => _todoWork(),
-                      child: new Container(
-                        padding: EdgeInsets.only(
-                            left: 10.0, top: 10.0, bottom: 10.0),
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: new Text("备忘录"),
-                      ),
-                    ),
-                  ],
-                ),
-                new Row(
-                  children: <Widget>[
-                    new GestureDetector(
-                      onTap: () => _logout(),
-                      child: new Container(
-                        padding: EdgeInsets.only(
-                            left: 10.0, top: 10.0, bottom: 10.0),
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: new Text("退出登陆"),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+      drawer: _buildLeftDrawer(),
       body: new RefreshIndicator(
         child: new Stack(
           children: <Widget>[
@@ -167,8 +94,8 @@ class WeListPageState extends State<WeListPage>
             ),
 
             new TimelineComponent(
-              timelineList: weControllor.timeLineModels,
-              listviewItemClickCallBack: weControllor,
+              timelineList: widget.weControllor.timeLineModels,
+              listviewItemClickCallBack: widget.weControllor,
               lineColor: Colors.black,
             ),
 
@@ -186,7 +113,7 @@ class WeListPageState extends State<WeListPage>
   startAddProjectPage(TimelineModel timelineModel, EditType editType) {
     Navigator.push(context,
         new MaterialPageRoute(builder: (BuildContext context) {
-      return new AddProjectPage(timelineModel, weControllor, editType);
+      return new AddProjectPage(timelineModel, widget.weControllor, editType);
     }));
   }
 
@@ -207,14 +134,9 @@ class WeListPageState extends State<WeListPage>
   }
 
   _associate() {
-//    MarryUtil.addWaitMarrayUser(
-//        myUserId: "00550567ea",
-//        otherUserId: "d03745ca20",
-//        sessionToken: widget.sessionToken);
-
     Navigator.push(context,
         new MaterialPageRoute(builder: (BuildContext context) {
-      return new AssociatePage(widget.userid, weControllor);
+      return new AssociatePage(widget.userid, widget.weControllor);
     }));
   }
 
@@ -226,9 +148,7 @@ class WeListPageState extends State<WeListPage>
   }
 
   Future<Null> _refresh() async {
-    weControllor.initOther();
-    weControllor.init();
-    print("refresh");
+    widget.weControllor.initOther();
     return;
   }
 
@@ -237,5 +157,89 @@ class WeListPageState extends State<WeListPage>
         new MaterialPageRoute(builder: (BuildContext context) {
       return new ToDoWorkPage(widget.userid);
     }));
+  }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  _buildLeftDrawer() {
+    return new Drawer(
+      child: new Stack(
+        children: <Widget>[
+          new Container(
+            decoration: new BoxDecoration(
+                image: new DecorationImage(
+              image: new AssetImage("images/login_signup_background.jpg"),
+              fit: BoxFit.cover,
+            )),
+          ),
+          new Column(
+            children: <Widget>[
+              new UserAccountsDrawerHeader(
+                decoration: new BoxDecoration(
+                    image: new DecorationImage(
+                        image: new NetworkImage(
+                            "http://t2.hddhhn.com/uploads/tu/201612/98/st93.png"))),
+                accountName: new Text("phone:" + widget.phoneNumber),
+                accountEmail: new Text("userid:" + widget.userid),
+              ),
+              new Row(
+                children: <Widget>[
+                  new GestureDetector(
+                    onTap: () => _associate(),
+                    child: new Container(
+                      padding:
+                          EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: new Text("账号关联"),
+                    ),
+                  ),
+                ],
+              ),
+              new Row(
+                children: <Widget>[
+                  new GestureDetector(
+                    onTap: () => _message(),
+                    child: new Container(
+                      padding:
+                          EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: new Text("消息"),
+                    ),
+                  ),
+                ],
+              ),
+              new Row(
+                children: <Widget>[
+                  new GestureDetector(
+                    onTap: () => _todoWork(),
+                    child: new Container(
+                      padding:
+                          EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: new Text("备忘录"),
+                    ),
+                  ),
+                ],
+              ),
+              new Row(
+                children: <Widget>[
+                  new GestureDetector(
+                    onTap: () => _logout(),
+                    child: new Container(
+                      padding:
+                          EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: new Text("退出登陆"),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -29,6 +29,9 @@ class _AssociateState extends State<AssociatePage> {
       marriedUser = inquireStatus["MarriedUser"];
       isMarried = inquireStatus['isMarried'];
       WaitMarryUser = inquireStatus['WaitMarryUser'];
+      if (isMarried == null) {
+        isMarried = false;
+      }
     });
   }
 

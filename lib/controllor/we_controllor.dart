@@ -16,6 +16,7 @@ import 'package:flutter_we/pages/we_page.dart';
 import 'package:flutter_we/utils/db_util.dart';
 import 'package:flutter_we/utils/http_util.dart';
 import 'package:flutter_we/utils/marry_util.dart';
+import 'package:flutter_we/utils/share_preferences_util.dart';
 //import 'package:flutter_we/utils/jpush_util.dart';
 
 class WeControllor
@@ -31,10 +32,22 @@ class WeControllor
   String otherId = "";
   bool isMarried = false;
 
-  bool hasDownLoadData = false;
-  bool needNetWork = true;
+  bool _sychWithServerFlag = false;
 
-  //JpushUtil jpushUtil;
+  setSychWithServerFlag(bool value) async {
+    _sychWithServerFlag = value;
+    for (TimelineModel model in timeLineModels) {
+      if (!model.inServer) {
+        var c = await HttpUtil.uploadData(timelineModel: model, userId: userid);
+        if (!c['result']) {
+          return false;
+        }
+      }
+    }
+    bool initFlag = await init();
+
+    return initFlag;
+  } //JpushUtil jpushUtil;
 
   getIdModel(String id) {
     for (TimelineModel item in timeLineModels) {
@@ -49,73 +62,89 @@ class WeControllor
   initOther() async {
     var inquireValue = await MarryUtil.Inquire(userId: userid);
     isMarried = inquireValue['isMarried'];
+    if(!isMarried){
+      isMarried=false;
+    }
     var otherValue =
         await MarryUtil.getUserIdByUserName(inquireValue['MarriedUser']);
     if ("false" != otherValue) {
       otherId = otherValue as String;
-      print("init Other:");
-      print(isMarried);
-      print(otherId);
-      init();
     }
+
+    init();
+  }
+
+  initSp() async {
+    SharePreferenceUtil sharePreferenceUtil =
+        await SharePreferenceUtil.getInstance();
+    bool temp_light = sharePreferenceUtil.getBool(SP_SYNCH_SWITCH_KEY);
+
+    if (temp_light == null) {
+      temp_light = false;
+    }
+
+    _sychWithServerFlag = temp_light;
+    initOther();
   }
 
   WeControllor(this.weListPageState) {
     userid = weListPageState.widget.userid;
-    initOther();
-    //jpushUtil = new JpushUtil();
+    initSp();
   }
 
   init() async {
     timeLineModels.clear();
-    if (userid.isNotEmpty && needNetWork) {
-      if (isMarried) {
-        print("isMarried");
 
-        if (otherId != "") {
-          var otherValue = await HttpUtil.downloadData(otherId);
+    print("we contonller init");
+    print(isMarried);
 
-          if (otherValue["result"]) {
-            List<TimelineModel> otherTimeLineModels =
-                otherValue["timelineModelList"];
+    if (isMarried) {
+      if (otherId != "") {
+        var otherValue = await HttpUtil.downloadData(otherId);
 
-            for (TimelineModel model in otherTimeLineModels) {
-              model.isOther = true;
-              timeLineModels.add(model);
-            }
+        if (otherValue["result"]) {
+          List<TimelineModel> otherTimeLineModels =
+              otherValue["timelineModelList"];
+
+          for (TimelineModel model in otherTimeLineModels) {
+            model.isOther = true;
+
+            timeLineModels.add(model);
           }
-        }
+        } else {}
       }
-
-      var value = await HttpUtil.downloadData(userid);
-
-      if (value["result"]) {
-        List<TimelineModel> mytimeLineModels = value["timelineModelList"];
-
-        for (TimelineModel model in mytimeLineModels) {
-          timeLineModels.add(model);
-        }
-      }
-
-      timeLineModels.sort(_compare);
-
-      weListPageState.updateState(this);
-      hasDownLoadData = true;
     }
 
-    if (!hasDownLoadData) {
-      var result = await DbUtil.queryDataDb(userid);
-      print("query result:" + result.toString());
+    if (userid.isNotEmpty) {
+      if (_sychWithServerFlag) {
+        var value = await HttpUtil.downloadData(userid);
 
-      if (result["result"] >= 0) {
-        timeLineModels = result["timeLineModelList"];
+        if (value["result"]) {
+          List<TimelineModel> mytimeLineModels = value["timelineModelList"];
+
+          for (TimelineModel model in mytimeLineModels) {
+            timeLineModels.add(model);
+          }
+        }
+
+        timeLineModels.sort(_compare);
+
         weListPageState.updateState(this);
+      } else {
+        var result = await DbUtil.queryDataDb(userid);
+
+        if (result["result"] >= 0) {
+          List<TimelineModel> tempTimelineModels = result["timeLineModelList"];
+
+          int len = tempTimelineModels.length;
+          for (TimelineModel model in tempTimelineModels) {
+            timeLineModels.add(model);
+          }
+
+          timeLineModels.sort(_compare);
+          weListPageState.updateState(this);
+        }
       }
-
-      /**
-       * 从数据库中读取数据，将数据恢复到timeLineModels中
-       */
-
     }
   }
 
@@ -141,15 +170,15 @@ class WeControllor
               title: new Text("确认删除该条目？"),
               actions: <Widget>[
                 new CupertinoDialogAction(
-                  child: const Text('确定'),
+                  child: const Text('取消'),
                   onPressed: () {
-                    deleteTimeLineModelById(id);
                     Navigator.pop(weListPageState.context);
                   },
                 ),
                 new CupertinoDialogAction(
-                  child: const Text('取消'),
+                  child: const Text('确定'),
                   onPressed: () {
+                    deleteTimeLineModelById(id);
                     Navigator.pop(weListPageState.context);
                   },
                 ),
@@ -190,7 +219,7 @@ class WeControllor
     }
     timeLineModels[0].id = result.toString();
 
-    if (needNetWork) {
+    if (_sychWithServerFlag) {
       var value = await HttpUtil.uploadData(
           timelineModel: timelineModel, userId: userid);
 
@@ -231,7 +260,7 @@ class WeControllor
 
     weListPageState.updateState(this);
 
-    if (needNetWork) {
+    if (_sychWithServerFlag) {
       var value = await HttpUtil.updateData(timelineModel);
 
       if (value["result"]) {

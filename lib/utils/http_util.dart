@@ -230,6 +230,8 @@ class HttpUtil {
               editbeanList: editbeanList,
               id: value["objectId"],
               messageType: value["messageType"]);
+          timelineModel.inServer = true;
+
           timelineModelList.add(timelineModel);
         }
 

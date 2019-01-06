@@ -14,7 +14,6 @@ import 'package:flutter_we/pages/exportmessage_page.dart';
 import 'package:flutter_we/utils/http_util.dart';
 import 'package:flutter_we/widgets/editor_widget.dart';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:ui' as ui;
 

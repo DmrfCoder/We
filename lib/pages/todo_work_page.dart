@@ -21,6 +21,7 @@ class ToDoWorkPage extends StatefulWidget {
 }
 
 class ToDoWorkState extends State<ToDoWorkPage>
+    with AutomaticKeepAliveClientMixin
     implements AddToDoEventCallBack {
   EventList markedDateMap = new EventList();
 
@@ -66,6 +67,7 @@ class ToDoWorkState extends State<ToDoWorkPage>
   @override
   void initState() {
     super.initState();
+
     initToDowork();
   }
 
@@ -122,61 +124,78 @@ class ToDoWorkState extends State<ToDoWorkPage>
 
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text("title"),
+          title: new Text("备忘录"),
+          backgroundColor: Color.fromRGBO(173, 195, 247, 1.0),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              //custom icon without header
-              Container(
-                margin: EdgeInsets.only(
-                  top: 30.0,
-                  bottom: 16.0,
-                  left: 16.0,
-                  right: 16.0,
-                ),
-                child: new Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: Text(
-                      _currentMonth,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24.0,
-                      ),
-                    )),
-                    FlatButton(
-                      child: Text('PREV'),
-                      onPressed: () {
-                        setState(() {
-                          _currentDate2 =
-                              _currentDate2.subtract(Duration(days: 30));
-                          _currentMonth =
-                              DateFormat.yMMM().format(_currentDate2);
-                        });
-                      },
+        body: new Stack(
+          children: <Widget>[
+            new Container(
+              decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                image: new AssetImage("images/login_signup_background.jpg"),
+                fit: BoxFit.cover,
+              )),
+            ),
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  //custom icon without header
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: 30.0,
+                      bottom: 16.0,
+                      left: 16.0,
+                      right: 16.0,
                     ),
-                    FlatButton(
-                      child: Text('NEXT'),
-                      onPressed: () {
-                        setState(() {
-                          _currentDate2 = _currentDate2.add(Duration(days: 30));
-                          _currentMonth =
-                              DateFormat.yMMM().format(_currentDate2);
-                        });
-                      },
-                    )
-                  ],
-                ),
+                    child: new Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Text(
+                          _currentMonth,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24.0,
+                          ),
+                        )),
+                        FlatButton(
+                          child: Text('PREV'),
+                          onPressed: () {
+                            setState(() {
+                              _currentDate2 =
+                                  _currentDate2.subtract(Duration(days: 30));
+                              _currentMonth =
+                                  DateFormat.yMMM().format(_currentDate2);
+                            });
+                          },
+                        ),
+                        FlatButton(
+                          child: Text('NEXT'),
+                          onPressed: () {
+                            setState(() {
+                              _currentDate2 =
+                                  _currentDate2.add(Duration(days: 30));
+                              _currentMonth =
+                                  DateFormat.yMMM().format(_currentDate2);
+                            });
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: _calendarCarouselNoHeader,
+                  ), //
+                ],
               ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 16.0),
-                child: _calendarCarouselNoHeader,
-              ), //
-            ],
-          ),
+            )
+          ],
         ));
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

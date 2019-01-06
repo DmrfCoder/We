@@ -6,9 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_we/beans/edit_list_bean.dart';
 import 'package:flutter_we/beans/event_bean.dart';
 import 'package:flutter_we/utils/http_util.dart';
-import 'package:test/test.dart';
-
-import 'package:http/http.dart' as http;
+import 'package:test_api/test_api.dart';
 
 void main() {
   test("sign up test", () async {

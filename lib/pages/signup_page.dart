@@ -143,7 +143,7 @@ class _SignUpState extends State<SignUpPage> {
                           cursorColor: Colors.black,
                           decoration: new InputDecoration(
                             hintText: '手机号码',
-                            errorText: _correctPhone ? null : '号码的长度应该在7到12位之间',
+                            errorText: _correctPhone ? null : '手机号码的长度应该在7到12位之间',
                             icon: new Icon(
                               Icons.phone,
                               color: Colors.white,

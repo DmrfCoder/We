@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_we/beans/constant_bean.dart';
+import 'package:flutter_we/pages/IndexPage.dart';
 import 'package:flutter_we/pages/signup_page.dart';
 import 'package:flutter_we/pages/we_page.dart';
 import 'package:flutter_we/utils/http_util.dart';
 import 'package:flutter_we/utils/share_preferences_util.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   bool autoLogin = true;
@@ -29,9 +32,6 @@ class _LoginState extends State<LoginPage> {
   bool showProgress = false;
 
   String _userid = "";
-
-  String PHONE_KEY = "phone_number";
-  String PASSWORD_kEY = "password_number";
 
   void _checkInput() {
     if (_phoneController.text.isNotEmpty &&
@@ -60,13 +60,12 @@ class _LoginState extends State<LoginPage> {
         showProgress = false;
       });
 
-      /* Fluttertoast.showToast(
-          msg: value["error"] == null ? "登陆失败，请检查您的网络!" : value["error"],
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          bgcolor: "#e74c3c",
-          textcolor: '#ffffff');*/
+      Fluttertoast.showToast(
+        msg: value["error"] == null ? "登陆失败，请检查您的网络!" : value["error"],
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+      );
 
       return;
     } else {
@@ -74,15 +73,14 @@ class _LoginState extends State<LoginPage> {
         showProgress = false;
       });
 
-      /* Fluttertoast.showToast(
-          msg: "登陆成功！",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          bgcolor: "#e74c3c",
-          textcolor: '#ffffff');*/
+      Fluttertoast.showToast(
+        msg: "登陆成功！",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+      );
 
-      navigateToWeListPage(value["user_id"], value["sessionToken"]);
+      navigateToIndexPage(value["user_id"], value["sessionToken"]);
     }
   }
 
@@ -92,23 +90,9 @@ class _LoginState extends State<LoginPage> {
     FocusScope.of(context).requestFocus(new FocusNode());
     _checkInput();
     if (_phoneController.text == '' || _passwordController.text == '') {
-//      Fluttertoast.showToast(
-//          msg: "登录信息填写不完整",
-//          toastLength: Toast.LENGTH_SHORT,
-//          gravity: ToastGravity.BOTTOM,
-//          timeInSecForIos: 1,
-//          bgcolor: "#e74c3c",
-//          textcolor: '#ffffff');
       check = false;
       return;
     } else if (!_correctPhone || !_correctPassword) {
-//      Fluttertoast.showToast(
-//          msg: "登录信息的格式不正确",
-//          toastLength: Toast.LENGTH_SHORT,
-//          gravity: ToastGravity.BOTTOM,
-//          timeInSecForIos: 1,
-//          bgcolor: "#e74c3c",
-//          textcolor: '#ffffff');
       check = false;
       return;
     }
@@ -130,8 +114,8 @@ class _LoginState extends State<LoginPage> {
   _getSpInfo() async {
     SharePreferenceUtil sharePreferenceUtil =
         await SharePreferenceUtil.getInstance();
-    _phoneController.text = sharePreferenceUtil.getString(PHONE_KEY);
-    _passwordController.text = sharePreferenceUtil.getString(PASSWORD_kEY);
+    _phoneController.text = sharePreferenceUtil.getString(SP_PHONE_KEY);
+    _passwordController.text = sharePreferenceUtil.getString(SP_PASSWORD_kEY);
 
     if (!widget.autoLogin) {
       return;
@@ -148,6 +132,7 @@ class _LoginState extends State<LoginPage> {
 
     super.initState();
     _getSpInfo();
+
   }
 
   @override
@@ -259,15 +244,15 @@ class _LoginState extends State<LoginPage> {
     SharePreferenceUtil sharePreferenceUtil =
         await SharePreferenceUtil.getInstance();
 
-    sharePreferenceUtil.putString(PHONE_KEY, _phoneController.text);
-    sharePreferenceUtil.putString(PASSWORD_kEY, _passwordController.text);
+    sharePreferenceUtil.putString(SP_PHONE_KEY, _phoneController.text);
+    sharePreferenceUtil.putString(SP_PASSWORD_kEY, _passwordController.text);
   }
 
-  navigateToWeListPage(String userid, String sessionToken) {
+  navigateToIndexPage(String userid, String sessionToken) {
     putSpInfo();
     Navigator.pushAndRemoveUntil(context,
         new MaterialPageRoute(builder: (BuildContext context) {
-      return new WeListPage(userid, _phoneController.text, sessionToken);
+      return new IndexPage(userid, _phoneController.text, sessionToken);
     }), (route) => route == null);
   }
 

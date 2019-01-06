@@ -18,6 +18,8 @@ class TimelineModel {
 
   bool isOther=false;
 
+  bool inServer=false;
+
   getLength() {
     return editbeanList.list.length;
   }

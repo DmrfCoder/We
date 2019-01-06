@@ -21,6 +21,18 @@ class SharePreferenceUtil {
     }
   }
 
+  putBool(String key, bool value) {
+    if (sharedPreferences != null) {
+      sharedPreferences.setBool(key, value);
+    }
+  }
+
+  getBool(String key) {
+    if (sharedPreferences != null) {
+      return sharedPreferences.get(key);
+    }
+  }
+
   getString(String key) {
     if (sharedPreferences != null) {
       return sharedPreferences.get(key);
