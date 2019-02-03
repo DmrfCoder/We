@@ -2,7 +2,8 @@
 
 一个基于Flutter的情侣日常社交APP，可同时部署在Android和iOS设备上，主要功能有：
 
-- 情侣日常记录
+- 情侣日常记录(富文本记录)，类似锤子便签
+- 日常记录导出为图片
 - 备忘录功能
 - 情侣账号关联、数据同步
 - 数据导出
@@ -13,10 +14,10 @@
 <table border="2px">
     <tr>
     <td>
-        <img src=https://ws1.sinaimg.cn/large/006tNc79ly1fzt7uzhab3j30u01szajs.jpg alt=""/>
+        <img src=./img/1.png alt=""/>
         </td>
         <td>
-         <img src=https://ws4.sinaimg.cn/large/006tNc79ly1fzt7vf22ozj30u01szqf6.jpg alt=""/>
+         <img src=./img/3.png alt=""/>
         </td>
     </tr>
 </table>
@@ -26,13 +27,24 @@
 <table border="2px">
     <tr>
     <td>
-        <img src=https://ws2.sinaimg.cn/large/006tNc79ly1fzt7vq1yfoj30u01sz49n.jpg alt=""/>
+        <img src=./img/2.png alt=""/>
         </td>
         <td>
-         <img src=https://ws3.sinaimg.cn/large/006tNc79ly1fzt7w50stnj30u01sz7c2.jpg alt=""/>
+         <img src=./img/4.png alt=""/>
         </td>
     </tr>
 </table>
 
-![Simulator Screen Shot - iPhone XS - 2019-02-03 at 14.26.58](https://ws3.sinaimg.cn/large/006tNc79ly1fzt7wl3wtcj30u01szkg3.jpg)
+
+
+<table border="2px">
+    <tr>
+    <td>
+        <img src=./img/5.png alt=""/>
+        </td>
+        <td>
+         <img src=./img/6.png alt=""/>
+        </td>
+    </tr>
+</table>
 
